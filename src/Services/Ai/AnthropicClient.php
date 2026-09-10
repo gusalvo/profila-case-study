@@ -59,29 +59,29 @@ use Throwable;
 final class AnthropicClient implements AiClient
 {
     /**
- * Per-request memoization of resolved profiles. The provider is
- * stateless and the profile JSON is immutable per deploy, so caching
- * category value avoids re-reading/re-parsing disk on every AI call
- * including each of the 20+ per-plan-item generations in a single plan run.
- *
- * @var array<string, array<string, mixed>>
+     * Per-request memoization of resolved profiles. The provider is
+     * stateless and the profile JSON is immutable per deploy, so caching
+     * category value avoids re-reading/re-parsing disk on every AI call
+     * including each of the 20+ per-plan-item generations in a single plan run.
+     *
+     * @var array<string, array<string, mixed>>
      */
     private array $verticalProfileCache = [];
 
- // Constructor-inject the (stateless) provider so the container
- // supplies a shared instance and it can be mocked when unit-testing this
- // class, instead of hardcoding `new VerticalProfileProvider`.
+    // Constructor-inject the (stateless) provider so the container
+    // supplies a shared instance and it can be mocked when unit-testing this
+    // class, instead of hardcoding `new VerticalProfileProvider`.
     public function __construct(
         private readonly VerticalProfileProvider $verticalProfileProvider = new VerticalProfileProvider,
     ) {}
 
     /**
- * Resolve (and memoize per request) the vertical_profile for a brand's
- * Category. collapses the repeated
- * `$this->verticalProfileProvider->forCategory($brand->category)` calls
- * scattered across every pipeline into a single memoized lookup.
- *
- * @return array<string, mixed>
+     * Resolve (and memoize per request) the vertical_profile for a brand's
+     * Category. collapses the repeated
+     * `$this->verticalProfileProvider->forCategory($brand->category)` calls
+     * scattered across every pipeline into a single memoized lookup.
+     *
+     * @return array<string, mixed>
      */
     private function verticalProfileFor(Brand $brand): array
     {
@@ -90,7 +90,7 @@ final class AnthropicClient implements AiClient
     }
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function generateBrief(
         Brand $brand,
@@ -99,15 +99,15 @@ final class AnthropicClient implements AiClient
         GenerationGoal $goal,
         ?array $personaPayload = null,
     ): BriefAiResponse {
- // B3: pure pass-through. No persona-resolution code here. The caller
- // (BriefGenerator in) owns persona resolution.
+        // B3: pure pass-through. No persona-resolution code here. The caller
+        // (BriefGenerator in) owns persona resolution.
         $verticalProfile = $this->verticalProfileFor($brand);
         $systemBlock = PromptTemplates::brief($brand, $personaPayload, $verticalProfile);
 
- // closed the placeholder: real source serialization now
- // place via the deterministic \App\Services\Brief\SourcesSerializer::class
- // (///). The class is fully stateless; the static
- // call avoids a needless container resolve.
+        // closed the placeholder: real source serialization now
+        // place via the deterministic \App\Services\Brief\SourcesSerializer::class
+        // (///). The class is fully stateless; the static
+        // call avoids a needless container resolve.
         $serializedSources = \App\Services\Brief\SourcesSerializer::serialize($sources);
 
         $userMessage = view('prompts.brief_user', [
@@ -117,10 +117,10 @@ final class AnthropicClient implements AiClient
             'goal' => $goal,
         ])->render();
 
- // Delegate to the shared post helper instead of re-implementing
- // the headers / timeout / error-status cascade / usage extraction inline.
- // post reads the model from the passed body, so the brief model
- // (config('services.anthropic.model')) is supplied here.
+        // Delegate to the shared post helper instead of re-implementing
+        // the headers / timeout / error-status cascade / usage extraction inline.
+        // post reads the model from the passed body, so the brief model
+        // (config('services.anthropic.model')) is supplied here.
         $body = [
             'model' => config('services.anthropic.model'),
             'max_tokens' => 4000,
@@ -146,12 +146,12 @@ final class AnthropicClient implements AiClient
         return new BriefAiResponse(rawText: $rawText, usage: $usage);
     }
 
- //
- // Pipeline 2 (generateIdeas — Haiku,; Sonnet reverted 2026-06-04 — sync timeout)
- //
+    //
+    // Pipeline 2 (generateIdeas — Haiku,; Sonnet reverted 2026-06-04 — sync timeout)
+    //
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function generateIdeas(
         Brand $brand,
@@ -175,12 +175,12 @@ final class AnthropicClient implements AiClient
         );
 
         $body = [
- // Haiku. NOTE 2026-06-04: briefly promoted to Sonnet for quality, but
- // idea generation is a SYNCHRONOUS request (blocks the Livewire call + loader)
- // and Sonnet's latency on a 20-30 idea batch exceeded the 60s Anthropic timeout
- // (AiTransientException). Reverted to Haiku, which fits the synchronous window.
- // The $avoidIdeas anti-repetition (the actual fix for duplicate ideas) is
- // model-agnostic and stays. To revisit Sonnet, make this pipeline async/queued.
+            // Haiku. NOTE 2026-06-04: briefly promoted to Sonnet for quality, but
+            // idea generation is a SYNCHRONOUS request (blocks the Livewire call + loader)
+            // and Sonnet's latency on a 20-30 idea batch exceeded the 60s Anthropic timeout
+            // (AiTransientException). Reverted to Haiku, which fits the synchronous window.
+            // The $avoidIdeas anti-repetition (the actual fix for duplicate ideas) is
+            // model-agnostic and stays. To revisit Sonnet, make this pipeline async/queued.
             'model' => 'claude-haiku-4-5',
             'max_tokens' => 8000,
             'system' => [
@@ -200,12 +200,12 @@ final class AnthropicClient implements AiClient
         return new IdeasAiResponse(rawText: $rawText, usage: $usage);
     }
 
- //
- // Pipeline 3 (generatePlanItem — Sonnet)
- //
+    //
+    // Pipeline 3 (generatePlanItem — Sonnet)
+    //
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function generatePlanItem(
         Brand $brand,
@@ -220,7 +220,7 @@ final class AnthropicClient implements AiClient
         $verticalProfile = $this->verticalProfileFor($brand);
         $systemPrompt = PromptTemplates::planItem($brand, $brief, $idea, $format, $personaPayload, $arcStage, $hashtagVocab, $continuityDigest, $verticalProfile);
 
- // /bilingual: it_en requires extra tokens for both language versions.
+        // /bilingual: it_en requires extra tokens for both language versions.
         $maxTokens = $brand->language === BrandLanguage::ItEn ? 4000 : 2000;
 
         $body = [
@@ -243,12 +243,12 @@ final class AnthropicClient implements AiClient
         return new PlanItemAiResponse(rawText: $rawText, usage: $usage);
     }
 
- //
- // regen_caption (Haiku)
- //
+    //
+    // regen_caption (Haiku)
+    //
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function regenerateCaption(PlanItem $item, Brand $brand, BrandBrief $brief, array $hashtagVocab = []): PlanItemAiResponse
     {
@@ -275,12 +275,12 @@ final class AnthropicClient implements AiClient
         return new PlanItemAiResponse(rawText: $rawText, usage: $usage);
     }
 
- //
- // regen_visual (Haiku)
- //
+    //
+    // regen_visual (Haiku)
+    //
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function regenerateVisual(PlanItem $item, Brand $brand, BrandBrief $brief): PlanItemAiResponse
     {
@@ -307,26 +307,26 @@ final class AnthropicClient implements AiClient
         return new PlanItemAiResponse(rawText: $rawText, usage: $usage);
     }
 
- //
- // regen_full (Sonnet)
- //
+    //
+    // regen_full (Sonnet)
+    //
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function regenerateFull(PlanItem $item, Brand $brand, BrandBrief $brief, ?array $personaPayload = null, ?ArcStage $arcStage = null, array $hashtagVocab = []): PlanItemAiResponse
     {
- // regenerateFull reuses plan_item.blade.php with the existing item data
- // as the ContentIdea context (loaded from the item's idea relation or
- // rebuilt inline from item fields).
+        // regenerateFull reuses plan_item.blade.php with the existing item data
+        // as the ContentIdea context (loaded from the item's idea relation or
+        // rebuilt inline from item fields).
         $idea = $item->idea ?? $this->buildIdeaFromItem($item);
 
- // regenerateFull reuses plan_item.blade.php; continuityDigest passed as []
- // regen does not rebuild history context (digest is generation-side only).
+        // regenerateFull reuses plan_item.blade.php; continuityDigest passed as []
+        // regen does not rebuild history context (digest is generation-side only).
         $verticalProfile = $this->verticalProfileFor($brand);
         $systemPrompt = PromptTemplates::planItem($brand, $brief, $idea, $item->format ?? PlanFormat::Post, $personaPayload, $arcStage, $hashtagVocab, [], $verticalProfile);
 
- // /bilingual: it_en requires extra tokens.
+        // /bilingual: it_en requires extra tokens.
         $maxTokens = $brand->language === BrandLanguage::ItEn ? 4000 : 2000;
 
         $body = [
@@ -349,12 +349,12 @@ final class AnthropicClient implements AiClient
         return new PlanItemAiResponse(rawText: $rawText, usage: $usage);
     }
 
- //
- // analyzeFirstImpression (Haiku)
- //
+    //
+    // analyzeFirstImpression (Haiku)
+    //
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function analyzeFirstImpression(
         Brand $brand,
@@ -364,11 +364,11 @@ final class AnthropicClient implements AiClient
         $verticalProfile = $this->verticalProfileFor($brand);
         $systemPrompt = PromptTemplates::firstImpression($brand, $verticalProfile);
 
- // Prompt-injection guard: untrusted scraped/social content is XML-delimited in the
- // user message via the dedicated user-only partial. The cached system
- // prefix (schema + role) is built once by PromptTemplates::firstImpression
- // above — the user message no longer re-renders it, removing the
- // double-render and its cache-drift risk.
+        // Prompt-injection guard: untrusted scraped/social content is XML-delimited in the
+        // user message via the dedicated user-only partial. The cached system
+        // prefix (schema + role) is built once by PromptTemplates::firstImpression
+        // above — the user message no longer re-renders it, removing the
+        // double-render and its cache-drift risk.
         $userMessage = view('prompts.first_impression_user', [
             'websiteContent' => $websiteContent,
             'socialMeta'     => $socialMeta,
@@ -395,12 +395,12 @@ final class AnthropicClient implements AiClient
     }
 
     /**
- * Generate the "Logica del piano editoriale" (plan_logic) — Haiku.
- *
- * System block (cacheable) = brand/brief grounding + anti-hallucination
- * rules. User message (per-plan, not cached) = the actual distribution.
- *
- * @param array<string, mixed> $distribution
+     * Generate the "Logica del piano editoriale" (plan_logic) — Haiku.
+     *
+     * System block (cacheable) = brand/brief grounding + anti-hallucination
+     * rules. User message (per-plan, not cached) = the actual distribution.
+     *
+     * @param array<string, mixed> $distribution
      */
     public function generatePlanLogic(
         Brand $brand,
@@ -430,12 +430,12 @@ final class AnthropicClient implements AiClient
         return new PlanLogicResponse(text: trim($rawText), usage: $usage);
     }
 
- //
- // generateSimilarBusinessOpportunities (Haiku)
- //
+    //
+    // generateSimilarBusinessOpportunities (Haiku)
+    //
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function generateSimilarBusinessOpportunities(
         Brand $brand,
@@ -449,8 +449,8 @@ final class AnthropicClient implements AiClient
         $userMessage = $this->buildSimilarBusinessUserMessage($presenceMap, $confirmedSites);
 
         $body = [
- // Haiku — same timeout discipline as generateIdeas.
- // Sonnet risks the 60s sync timeout on this synchronous call (memory: project_ideas_history_aware_sonnet).
+            // Haiku — same timeout discipline as generateIdeas.
+            // Sonnet risks the 60s sync timeout on this synchronous call (memory: project_ideas_history_aware_sonnet).
             'model'      => 'claude-haiku-4-5',
             'max_tokens' => 1200,
             'system'     => [
@@ -471,20 +471,20 @@ final class AnthropicClient implements AiClient
     }
 
     /**
- * Build the per-run user message for the similar-activities synthesis.
- *
- * Serializes the deterministic presence map (TerritoryPresenceMapper::map output)
- * and confirmed-site summaries (title/meta only — GR anti-contamination
- * never pass raw competitor body text to the AI).
- *
- * @param list<array{name: string, level: string, reason: string}> $presenceMap
- * @param list<array{url: string, title: string, meta: string}> $confirmedSites
+     * Build the per-run user message for the similar-activities synthesis.
+     *
+     * Serializes the deterministic presence map (TerritoryPresenceMapper::map output)
+     * and confirmed-site summaries (title/meta only — GR anti-contamination
+     * never pass raw competitor body text to the AI).
+     *
+     * @param list<array{name: string, level: string, reason: string}> $presenceMap
+     * @param list<array{url: string, title: string, meta: string}> $confirmedSites
      */
     private function buildSimilarBusinessUserMessage(array $presenceMap, array $confirmedSites): string
     {
         $lines = [];
 
- // Territory presence map from TerritoryPresenceMapper
+        // Territory presence map from TerritoryPresenceMapper
         $lines[] = '<territory_map>';
         foreach ($presenceMap as $entry) {
             $name   = $entry['name']   ?? '';
@@ -496,7 +496,7 @@ final class AnthropicClient implements AiClient
 
         $lines[] = '';
 
- // Confirmed-site summaries — titles and meta only, never raw body text
+        // Confirmed-site summaries — titles and meta only, never raw body text
         $lines[] = '<siti_simili>';
         foreach ($confirmedSites as $site) {
             $url   = $site['url']   ?? '';
@@ -519,12 +519,12 @@ final class AnthropicClient implements AiClient
         return implode("\n", $lines);
     }
 
- //
- // generateThemeModel (Haiku, grounded)
- //
+    //
+    // generateThemeModel (Haiku, grounded)
+    //
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function generateThemeModel(
         Brand $brand,
@@ -536,7 +536,7 @@ final class AnthropicClient implements AiClient
         $verticalProfile = $this->verticalProfileFor($brand);
         $systemPrompt = PromptTemplates::themeModel($brand, $brief, $objective, $verticalProfile);
 
- // User message: grounded distribution + theme focus list.
+        // User message: grounded distribution + theme focus list.
         $lines = ['Temi da valutare:'];
         foreach ($themeFocus as $theme) {
             $lines[] = '- '.$theme;
@@ -572,12 +572,12 @@ final class AnthropicClient implements AiClient
 
         [$rawText, $usage] = $this->post($body);
 
- // Decode the AI's JSON into the structured DTO.
- // JsonExtractor strips markdown fences and extracts the JSON object.
+        // Decode the AI's JSON into the structured DTO.
+        // JsonExtractor strips markdown fences and extracts the JSON object.
         $decoded = JsonExtractor::extract($rawText);
 
- // The AI returns a map of theme => {certezza, funnel_stage, reasoning}.
- // Validate and normalise — any malformed entry gets a safe default.
+        // The AI returns a map of theme => {certezza, funnel_stage, reasoning}.
+        // Validate and normalise — any malformed entry gets a safe default.
         $themes = [];
         foreach ($decoded as $themeLabel => $entry) {
             if (! is_string($themeLabel) || ! is_array($entry)) {
@@ -594,10 +594,10 @@ final class AnthropicClient implements AiClient
     }
 
     /**
- * Render the plan distribution as a compact Italian text block for the
- * plan_logic user message. Only includes sections that have data.
- *
- * @param array<string, mixed> $distribution
+     * Render the plan distribution as a compact Italian text block for the
+     * plan_logic user message. Only includes sections that have data.
+     *
+     * @param array<string, mixed> $distribution
      */
     private function planLogicDistributionMessage(array $distribution): string
     {
@@ -606,8 +606,8 @@ final class AnthropicClient implements AiClient
         if (! empty($distribution['total'])) {
             $lines[] = 'Totale contenuti: '.$distribution['total'];
         }
- // Exact count of distinct editorial focuses (categories) — if the model
- // states a number of focuses it MUST use this one, never an invented numeral.
+        // Exact count of distinct editorial focuses (categories) — if the model
+        // states a number of focuses it MUST use this one, never an invented numeral.
         if (! empty($distribution['categories'])) {
             $lines[] = 'Focus editoriali distinti: '.count($distribution['categories']);
         }
@@ -618,7 +618,7 @@ final class AnthropicClient implements AiClient
             }
             $parts = [];
             foreach ($section as $name => $count) {
- // List ([v]) → just the value; map ([name => count]) → "name (count)".
+                // List ([v]) → just the value; map ([name => count]) → "name (count)".
                 $parts[] = is_int($name) ? (string) $count : $name.' ('.$count.')';
             }
             $lines[] = $label.': '.implode(', ', $parts);
@@ -629,21 +629,21 @@ final class AnthropicClient implements AiClient
         return implode("\n", $lines);
     }
 
- //
- // Shared HTTP request helper
- //
+    //
+    // Shared HTTP request helper
+    //
 
     /**
- * Execute a POST to Anthropic /v1/messages with the given body.
- *
- * Extracts shared HTTP logic: headers, timeout, error status cascade.
- * Returns [$rawText, $usage] as a 2-tuple.
- *
- * @param array<string, mixed> $body
- * @return array{0: string, 1: AiUsageMetrics}
- *
- * @throws AiRateLimitException
- * @throws AiTransientException
+     * Execute a POST to Anthropic /v1/messages with the given body.
+     *
+     * Extracts shared HTTP logic: headers, timeout, error status cascade.
+     * Returns [$rawText, $usage] as a 2-tuple.
+     *
+     * @param array<string, mixed> $body
+     * @return array{0: string, 1: AiUsageMetrics}
+     *
+     * @throws AiRateLimitException
+     * @throws AiTransientException
      */
     private function post(array $body): array
     {
@@ -703,16 +703,16 @@ final class AnthropicClient implements AiClient
         return [$rawText, $usage];
     }
 
- //
- // Private helpers
- //
+    //
+    // Private helpers
+    //
 
     /**
- * Build a transient ContentIdea-like object from a PlanItem for regenerateFull.
- *
- * regenerateFull needs a ContentIdea to pass to PromptTemplates::planItem.
- * When the item's idea relation is not loaded, we build an anonymous class
- * that satisfies the template's property accesses.
+     * Build a transient ContentIdea-like object from a PlanItem for regenerateFull.
+     *
+     * regenerateFull needs a ContentIdea to pass to PromptTemplates::planItem.
+     * When the item's idea relation is not loaded, we build an anonymous class
+     * that satisfies the template's property accesses.
      */
     private function buildIdeaFromItem(PlanItem $item): ContentIdea
     {
@@ -725,16 +725,16 @@ final class AnthropicClient implements AiClient
     }
 
     /**
- * Resolve the channel constraints for a brand (hint for AI + #6).
- *
- * #6 fix: previously returned a hardcoded all-six list, so the AI could
- * suggest channels (linkedin/threads/x) the brand never uses. Now constrained
- * to the brand's DETECTED channels ({@see Brand::detectedChannels()}) — Profila
- * does not propose content for platforms the client isn't on. Channels the
- * brand should *consider* adopting are surfaced separately as advice
- * ({@see \App\Services\Plans\ChannelAdvisor}), never as generated content.
- *
- * @return array<string>
+     * Resolve the channel constraints for a brand (hint for AI + #6).
+     *
+     * #6 fix: previously returned a hardcoded all-six list, so the AI could
+     * suggest channels (linkedin/threads/x) the brand never uses. Now constrained
+     * to the brand's DETECTED channels ({@see Brand::detectedChannels()}) — Profila
+     * does not propose content for platforms the client isn't on. Channels the
+     * brand should *consider* adopting are surfaced separately as advice
+     * ({@see \App\Services\Plans\ChannelAdvisor}), never as generated content.
+     *
+     * @return array<string>
      */
     private function resolveChannelConstraints(Brand $brand): array
     {
@@ -742,12 +742,12 @@ final class AnthropicClient implements AiClient
     }
 
     /**
- * Resolve the category ratio hint for a brand (format distribution).
- *
- * Pure function on BrandCategory. Used by generateIdeas to inform the
- * AI about the ideal format distribution for this brand's category.
- *
- * @return array<string, int>
+     * Resolve the category ratio hint for a brand (format distribution).
+     *
+     * Pure function on BrandCategory. Used by generateIdeas to inform the
+     * AI about the ideal format distribution for this brand's category.
+     *
+     * @return array<string, int>
      */
     private function resolveCategoryRatio(Brand $brand): array
     {

@@ -69,7 +69,7 @@ it('writes a success row with cost_usd matching AiCostCalculator for Sonnet cold
     expect($row->is_stub)->toBeFalse();
 
     $expected = AiCostCalculator::compute('claude-sonnet-4-6', 2750, 1500, 0, 2000);
- // cost_usd column is decimal(8,6) — compare with 6-dp tolerance.
+    // cost_usd column is decimal(8,6) — compare with 6-dp tolerance.
     expect((float) $row->cost_usd)->toBeGreaterThan(0.0);
     expect(abs((float) $row->cost_usd - $expected))->toBeLessThan(0.0000005);
 });

@@ -24,21 +24,21 @@ use InvalidArgumentException;
 final class AiCostCalculator
 {
     /**
- * Rates per million tokens (USD).
- *
- * @var array<string, array<string, float>>
+     * Rates per million tokens (USD).
+     *
+     * @var array<string, array<string, float>>
      */
     private const RATES = [
- // Current Sonnet tier (2026-08-26).
+        // Current Sonnet tier (2026-08-26).
         'claude-sonnet-5' => [
             'input' => 2.00,
             'cache_write' => 2.50,
             'cache_read' => 0.20,
             'output' => 10.00,
         ],
- // Retained after the migration: ai_usage_logs rows written
- // before 2026-08-26 name this model, and compute throws on any id
- // absent from this table. Removing it would break historical costing.
+        // Retained after the migration: ai_usage_logs rows written
+        // before 2026-08-26 name this model, and compute throws on any id
+        // absent from this table. Removing it would break historical costing.
         'claude-sonnet-4-6' => [
             'input' => 3.00,
             'cache_write' => 3.75,
@@ -54,12 +54,12 @@ final class AiCostCalculator
     ];
 
     /**
- * Compute the USD cost of one Anthropic call.
- *
- * @throws InvalidArgumentException When the model is not in the verified
- * RATES table (defends against typos
- * silent miscalculation if a future
- * refactor introduces a new model).
+     * Compute the USD cost of one Anthropic call.
+     *
+     * @throws InvalidArgumentException When the model is not in the verified
+     * RATES table (defends against typos
+     * silent miscalculation if a future
+     * refactor introduces a new model).
      */
     public static function compute(
         string $model,
@@ -68,10 +68,10 @@ final class AiCostCalculator
         int $cacheReadTokens = 0,
         int $cacheWriteTokens = 0,
     ): float {
- // Anthropic API can return either the alias (claude-haiku-4-5) or a
- // date-versioned ID (claude-haiku-4-5-20251001). Strip the optional
- // YYYYMMDD suffix before the rate lookup so both forms work without
- // duplicating entries in the RATES table.
+        // Anthropic API can return either the alias (claude-haiku-4-5) or a
+        // date-versioned ID (claude-haiku-4-5-20251001). Strip the optional
+        // YYYYMMDD suffix before the rate lookup so both forms work without
+        // duplicating entries in the RATES table.
         $normalized = (string) preg_replace('/-\d{8}$/', '', $model);
 
         if (! isset(self::RATES[$normalized])) {

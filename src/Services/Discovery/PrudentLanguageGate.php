@@ -25,31 +25,22 @@ use Normalizer;
 final class PrudentLanguageGate
 {
     /**
- * forbidden phrases.
- *
- * Stored in natural Italian; normalized at runtime via normalize.
- * Update this list only through an explicit product decision.
- *
- * @var list<string>
+     * Forbidden phrases, in natural Italian; normalized at runtime via normalize().
+     *
+     * The complete list is a product decision and is not part of these extracts.
+     * Two representative entries remain, enough to show the shape and to exercise
+     * the accent-insensitive matching below.
+     *
+     * @var list<string>
      */
     private const FORBIDDEN_PHRASES = [
-        'comunica male',
-        'non ha strategia',
-        'è debole',          // accented form — normalize() folds to 'e debole'
-        'e debole',          // already folded — covered by normalization anyway
-        'puoi superarlo',
-        'questo competitor domina',
-        'il mercato è libero',
-        'il mercato è scoperto',
-        'ci sono quote disponibili',
-        'hai un vantaggio competitivo',
+        'il mercato è libero',   // forma accentata — normalize() la riduce a 'e libero'
         'quote di mercato',
-        'spazi liberi nel mercato',
     ];
 
     /**
- * Returns true if the text passes the prudent-language gate (no forbidden phrases).
- * Returns false if any forbidden phrase is found (accent-insensitive, substring).
+     * Returns true if the text passes the prudent-language gate (no forbidden phrases).
+     * Returns false if any forbidden phrase is found (accent-insensitive, substring).
      */
     public function passes(string $text): bool
     {
@@ -67,12 +58,12 @@ final class PrudentLanguageGate
     }
 
     /**
- * Normalize text to lowercase accent-stripped form for Italian string matching.
- *
- * verbatim copy from TerritoryPresenceMapper::normalize — the codebase-canonical
- * NFD accent-fold (NFD decompose → strip combining marks → mb_strtolower UTF-8).
- *
- * @see \App\Services\Discovery\TerritoryPresenceMapper::normalize
+     * Normalize text to lowercase accent-stripped form for Italian string matching.
+     *
+     * verbatim copy from TerritoryPresenceMapper::normalize — the codebase-canonical
+     * NFD accent-fold (NFD decompose → strip combining marks → mb_strtolower UTF-8).
+     *
+     * @see \App\Services\Discovery\TerritoryPresenceMapper::normalize
      */
     private function normalize(string $text): string
     {

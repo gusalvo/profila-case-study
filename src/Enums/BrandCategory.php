@@ -23,8 +23,8 @@ namespace App\Enums;
  */
 enum BrandCategory: string
 {
- // Declaration order MUST match dropdown order (options uses cases()).
- // Common/deep-verticals first, Altro always last.
+    // Declaration order MUST match dropdown order (options uses cases()).
+    // Common/deep-verticals first, Altro always last.
     case StrutturaRicettiva  = 'struttura_ricettiva';   // 19 chars — VARCHAR(30) safe
     case RistoranteFood      = 'ristorante_food';
     case TourEsperienze      = 'tour_esperienze';
@@ -38,7 +38,7 @@ enum BrandCategory: string
     case Altro               = 'altro';                  // ALWAYS LAST
 
     /**
- * Italian human-readable label used in dropdowns + UI.
+     * Italian human-readable label used in dropdowns + UI.
      */
     public function label(): string
     {
@@ -58,11 +58,11 @@ enum BrandCategory: string
     }
 
     /**
- * Depth-tier classification for branching.
- *
- * true = Batch-1 deep vertical (dedicated vertical_profile authored in).
- * false = Batch-2 generic (NEVER labelled "specializzato" / "ottimizzato per il
- * tuo settore" in UI copy — honest-positioning guardrail).
+     * Depth-tier classification for branching.
+     *
+     * true = Batch-1 deep vertical (dedicated vertical_profile authored in).
+     * false = Batch-2 generic (NEVER labelled "specializzato" / "ottimizzato per il
+     * tuo settore" in UI copy — honest-positioning guardrail).
      */
     public function isDeepVertical(): bool
     {
@@ -76,11 +76,11 @@ enum BrandCategory: string
     }
 
     /**
- * Dropdown options helper: ['struttura_ricettiva' => 'Struttura ricettiva',...].
- *
- * Declaration order drives dropdown order — no extra sorting needed.
- *
- * @return array<string, string>
+     * Dropdown options helper: ['struttura_ricettiva' => 'Struttura ricettiva',...].
+     *
+     * Declaration order drives dropdown order — no extra sorting needed.
+     *
+     * @return array<string, string>
      */
     public static function options(): array
     {

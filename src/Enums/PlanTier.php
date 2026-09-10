@@ -18,7 +18,7 @@ enum PlanTier: string
     case Pro = 'pro';
 
     /**
- * Italian human-readable label used in dropdowns + UI.
+     * Italian human-readable label used in dropdowns + UI.
      */
     public function label(): string
     {
@@ -29,10 +29,10 @@ enum PlanTier: string
     }
 
     /**
- * Dropdown options helper: ['free' => 'Gratuito', 'pro' => 'Pro'].
- * Reserved for future pricing/upgrade UI.
- *
- * @return array<string, string>
+     * Dropdown options helper: ['free' => 'Gratuito', 'pro' => 'Pro'].
+     * Reserved for future pricing/upgrade UI.
+     *
+     * @return array<string, string>
      */
     public static function options(): array
     {

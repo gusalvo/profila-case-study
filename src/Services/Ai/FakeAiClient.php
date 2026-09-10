@@ -43,9 +43,9 @@ use Throwable;
  */
 final class FakeAiClient implements AiClient
 {
- //
- // generateBrief
- //
+    //
+    // generateBrief
+    //
 
     public int $callCount = 0;
 
@@ -74,9 +74,9 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * Set a sequence of responses or exceptions, one per call (FIFO).
- *
- * @param list<BriefAiResponse|Throwable> $sequence
+     * Set a sequence of responses or exceptions, one per call (FIFO).
+     *
+     * @param list<BriefAiResponse|Throwable> $sequence
      */
     public function setResponseSequence(array $sequence): void
     {
@@ -86,12 +86,12 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function generateBrief(Brand $brand, Collection $sources, ?BrandBrief $previousBrief, GenerationGoal $goal, ?array $personaPayload = null): BriefAiResponse
     {
- // B3 capture — store BEFORE throwing/returning so tests can assert on
- // the persona pass-through contract even when the fake is set to throw.
+        // B3 capture — store BEFORE throwing/returning so tests can assert on
+        // the persona pass-through contract even when the fake is set to throw.
         $this->lastPersonaPayload = $personaPayload;
 
         $index = $this->callCount;
@@ -120,9 +120,9 @@ final class FakeAiClient implements AiClient
         throw new RuntimeException('FakeAiClient: no response configured. Call setResponse(), setException(), or setResponseSequence() before generate().');
     }
 
- //
- // generateIdeas
- //
+    //
+    // generateIdeas
+    //
 
     public int $ideasCallCount = 0;
 
@@ -158,7 +158,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * @param list<IdeasAiResponse|Throwable> $responses
+     * @param list<IdeasAiResponse|Throwable> $responses
      */
     public function setIdeasResponses(array $responses): void
     {
@@ -168,7 +168,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function generateIdeas(
         Brand $brand,
@@ -208,9 +208,9 @@ final class FakeAiClient implements AiClient
         throw new RuntimeException('FakeAiClient: no ideas response configured. Call setIdeasResponse(), setIdeasThrowable(), or setIdeasResponses() first.');
     }
 
- //
- // generatePlanItem
- //
+    //
+    // generatePlanItem
+    //
 
     public int $planItemCallCount = 0;
 
@@ -246,7 +246,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * @param list<PlanItemAiResponse|Throwable> $responses
+     * @param list<PlanItemAiResponse|Throwable> $responses
      */
     public function setPlanItemResponses(array $responses): void
     {
@@ -256,7 +256,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
  /** @var array<string, mixed> Captured from the last generatePlanItem call — for ContinuityDigest pass-through assertions.*/
     public array $lastContinuityDigest = [];
@@ -275,7 +275,7 @@ final class FakeAiClient implements AiClient
         $this->lastPlanItemPersonaPayload = $personaPayload;
         $this->lastPlanItemArcStage = $arcStage;
         $this->lastPlanItemHashtagVocab = $hashtagVocab;
- // Capture BEFORE any return/throw (B3 verification hook — mirrors lastPersonaPayload pattern)
+        // Capture BEFORE any return/throw (B3 verification hook — mirrors lastPersonaPayload pattern)
         $this->lastContinuityDigest = $continuityDigest;
 
         $index = $this->planItemCallCount;
@@ -304,9 +304,9 @@ final class FakeAiClient implements AiClient
         throw new RuntimeException('FakeAiClient: no plan item response configured. Call setPlanItemResponse(), setPlanItemThrowable(), or setPlanItemResponses() first.');
     }
 
- //
- // regenerateCaption
- //
+    //
+    // regenerateCaption
+    //
 
     public int $regenCaptionCallCount = 0;
 
@@ -329,7 +329,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function regenerateCaption(PlanItem $item, Brand $brand, BrandBrief $brief, array $hashtagVocab = []): PlanItemAiResponse
     {
@@ -347,9 +347,9 @@ final class FakeAiClient implements AiClient
         throw new RuntimeException('FakeAiClient: no regen caption response configured. Call setRegenCaptionResponse() or setRegenCaptionThrowable() first.');
     }
 
- //
- // regenerateVisual
- //
+    //
+    // regenerateVisual
+    //
 
     public int $regenVisualCallCount = 0;
 
@@ -370,7 +370,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function regenerateVisual(PlanItem $item, Brand $brand, BrandBrief $brief): PlanItemAiResponse
     {
@@ -388,9 +388,9 @@ final class FakeAiClient implements AiClient
         throw new RuntimeException('FakeAiClient: no regen visual response configured. Call setRegenVisualResponse() or setRegenVisualThrowable() first.');
     }
 
- //
- // regenerateFull
- //
+    //
+    // regenerateFull
+    //
 
     public int $regenFullCallCount = 0;
 
@@ -411,7 +411,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function regenerateFull(PlanItem $item, Brand $brand, BrandBrief $brief, ?array $personaPayload = null, ?ArcStage $arcStage = null, array $hashtagVocab = []): PlanItemAiResponse
     {
@@ -429,9 +429,9 @@ final class FakeAiClient implements AiClient
         throw new RuntimeException('FakeAiClient: no regen full response configured. Call setRegenFullResponse() or setRegenFullThrowable() first.');
     }
 
- //
- // analyzeFirstImpression
- //
+    //
+    // analyzeFirstImpression
+    //
 
     public int $firstImpressionCallCount = 0;
 
@@ -457,7 +457,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * @param list<FirstImpressionResponse|Throwable> $responses
+     * @param list<FirstImpressionResponse|Throwable> $responses
      */
     public function setFirstImpressionResponses(array $responses): void
     {
@@ -467,7 +467,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function analyzeFirstImpression(
         Brand $brand,
@@ -500,9 +500,9 @@ final class FakeAiClient implements AiClient
         throw new RuntimeException('FakeAiClient: no first impression response configured. Call setFirstImpressionResponse() or setFirstImpressionThrowable() first.');
     }
 
- //
- // plan_logic (Logica del piano editoriale) — Haiku
- //
+    //
+    // plan_logic (Logica del piano editoriale) — Haiku
+    //
 
     public int $planLogicCallCount = 0;
 
@@ -530,7 +530,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function generatePlanLogic(Brand $brand, BrandBrief $brief, array $distribution): PlanLogicResponse
     {
@@ -546,17 +546,17 @@ final class FakeAiClient implements AiClient
             return $this->planLogicSingleResponse;
         }
 
- // Default canned response (no setup required) so existing rollup tests
- // that trigger plan_logic generation keep working unchanged.
+        // Default canned response (no setup required) so existing rollup tests
+        // that trigger plan_logic generation keep working unchanged.
         return new PlanLogicResponse(
             text:  'Logica del piano (fake): la distribuzione è coerente con il brief.',
             usage: new AiUsageMetrics('claude-haiku-4-5', 10, 20, 0, 0, 5),
         );
     }
 
- //
- // generateThemeModel
- //
+    //
+    // generateThemeModel
+    //
 
     public int $themeModelCallCount = 0;
 
@@ -579,9 +579,9 @@ final class FakeAiClient implements AiClient
         $this->themeModelSingleResponse = null;
     }
 
- //
- // generateSimilarBusinessOpportunities (SimilarOpportunitySynthesizer tests)
- //
+    //
+    // generateSimilarBusinessOpportunities (SimilarOpportunitySynthesizer tests)
+    //
 
     public int $similarOpportunitiesCallCount = 0;
 
@@ -623,7 +623,7 @@ final class FakeAiClient implements AiClient
             return $this->similarOpportunitiesSingleResponse;
         }
 
- // Default canned — quality_gate: true so default happy-path tests need no setup.
+        // Default canned — quality_gate: true so default happy-path tests need no setup.
         return new SimilarOpportunitiesResponse(
             rawText: json_encode([
                 'quality_gate'    => true,
@@ -638,7 +638,7 @@ final class FakeAiClient implements AiClient
     }
 
     /**
- * {@inheritDoc}
+     * {@inheritDoc}
      */
     public function generateThemeModel(
         Brand $brand,
@@ -657,7 +657,7 @@ final class FakeAiClient implements AiClient
             return $this->themeModelSingleResponse;
         }
 
- // Default deterministic stub (no weight fields — compliance).
+        // Default deterministic stub (no weight fields — compliance).
         $themes = [];
         foreach ($themeFocus as $theme) {
             $themes[(string) $theme] = [

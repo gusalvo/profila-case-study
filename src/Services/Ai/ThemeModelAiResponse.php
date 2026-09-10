@@ -28,9 +28,9 @@ namespace App\Services\Ai;
 final readonly class ThemeModelAiResponse
 {
     /**
- * @param array<string, array{certezza: string, funnel_stage: string, reasoning: string}> $themes
- * Keyed by theme label. Values are per-theme strategic assessment (no weights).
- * @param AiUsageMetrics $usage Per-call usage telemetry.
+     * @param array<string, array{certezza: string, funnel_stage: string, reasoning: string}> $themes
+     * Keyed by theme label. Values are per-theme strategic assessment (no weights).
+     * @param AiUsageMetrics $usage Per-call usage telemetry.
      */
     public function __construct(
         public array $themes,

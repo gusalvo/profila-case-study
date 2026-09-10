@@ -24,24 +24,24 @@ use JsonException;
 final class JsonExtractor
 {
     /**
- * Extract a JSON object/array from an LLM raw text response.
- *
- * @return array<string, mixed>|list<mixed>
- *
- * @throws InvalidAiResponseException If the response cannot be parsed
- * as JSON even after stripping the
- * markdown fence and prose prefix.
+     * Extract a JSON object/array from an LLM raw text response.
+     *
+     * @return array<string, mixed>|list<mixed>
+     *
+     * @throws InvalidAiResponseException If the response cannot be parsed
+     * as JSON even after stripping the
+     * markdown fence and prose prefix.
      */
     public static function extract(string $raw): array
     {
         $text = trim($raw);
 
- // Strip markdown fence: ```json... ``` or ```... ``` (anchored
- // multiline, so a fence in the middle is left alone).
+        // Strip markdown fence: ```json... ``` or ```... ``` (anchored
+        // multiline, so a fence in the middle is left alone).
         $text = preg_replace('/^```(?:json)?\s*/m', '', $text) ?? $text;
         $text = preg_replace('/\s*```$/m', '', $text) ?? $text;
 
- // Strip prose before the first { or [ (Unicode-safe).
+        // Strip prose before the first { or [ (Unicode-safe).
         $text = preg_replace('/^[^{\[]*([{\[])/u', '$1', $text) ?? $text;
 
         $text = trim($text);
@@ -52,9 +52,9 @@ final class JsonExtractor
 
             return $decoded;
         } catch (JsonException $e) {
- // mb_substr UTF-8 — Italian accents are multi-byte.
- //truncate BEFORE logging to avoid dumping multi-MB
- // payloads if Anthropic ever sends one.
+            // mb_substr UTF-8 — Italian accents are multi-byte.
+            //truncate BEFORE logging to avoid dumping multi-MB
+            // payloads if Anthropic ever sends one.
             Log::warning('AI JSON parse failed', [
                 'raw' => mb_substr($raw, 0, 2000, 'UTF-8'),
                 'cleaned' => mb_substr($text, 0, 2000, 'UTF-8'),

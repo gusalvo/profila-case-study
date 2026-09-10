@@ -22,15 +22,15 @@ use App\Models\Brand;
 final class QueryBuilder
 {
     /**
- * Build ≤2 query strings from the vertical profile templates.
- *
- * @param Brand $brand Brand model (must have `category` cast + optional `brief` relation).
- * @param array<string, mixed> $profile Result of VerticalProfileProvider::forCategory.
- * @return list<string>
+     * Build ≤2 query strings from the vertical profile templates.
+     *
+     * @param Brand $brand Brand model (must have `category` cast + optional `brief` relation).
+     * @param array<string, mixed> $profile Result of VerticalProfileProvider::forCategory.
+     * @return list<string>
      */
     public function build(Brand $brand, array $profile): array
     {
- // DISC-02 city-empty guard: city missing → zero queries, non-blocking
+        // DISC-02 city-empty guard: city missing → zero queries, non-blocking
         if (trim($brand->city ?? '') === '') {
             return [];
         }
@@ -42,13 +42,13 @@ final class QueryBuilder
             return [];
         }
 
- // Hard cap: ≤2 queries (DISC-02)
+        // Hard cap: ≤2 queries (DISC-02)
         $templates = array_slice($templates, 0, 2);
 
         $city          = $brand->city;
         $categoryLabel = mb_strtolower($brand->category->label(), 'UTF-8');
 
- // First BrandBrief service if the brief relation is loaded
+        // First BrandBrief service if the brief relation is loaded
         $servizio = '';
         $brief    = $brand->relationLoaded('brief') ? $brand->brief : null;
         if ($brief !== null && ! empty($brief->services)) {
@@ -62,7 +62,7 @@ final class QueryBuilder
                 [$city, $categoryLabel, $servizio],
                 $template
             );
- // Collapse extra whitespace left by an empty {servizio} token
+            // Collapse extra whitespace left by an empty {servizio} token
             $query = (string) preg_replace('/\s{2,}/u', ' ', trim($query));
             if ($query !== '') {
                 $queries[] = $query;

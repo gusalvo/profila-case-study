@@ -19,10 +19,10 @@ use App\Services\Discovery\DTOs\BraveResult;
 interface BraveSearchClient
 {
     /**
- * Execute a web search query and return normalized results.
- * NEVER throws — returns empty array on any failure (DISC-01).
- *
- * @return list<BraveResult>
+     * Execute a web search query and return normalized results.
+     * NEVER throws — returns empty array on any failure (DISC-01).
+     *
+     * @return list<BraveResult>
      */
     public function search(string $query): array;
 }

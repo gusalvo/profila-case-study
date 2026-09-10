@@ -46,7 +46,7 @@ final readonly class AiUsageRecord
         public ?string $providerErrorCode,
         public int $durationMs,
         public bool $isStub,
- // additions — default values maintain backward compat.
+        // additions — default values maintain backward compat.
         public ?int $editorialPlanId = null,
         public bool $isRegen = false,
     ) {

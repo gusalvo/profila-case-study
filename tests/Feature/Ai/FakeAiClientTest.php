@@ -16,19 +16,19 @@ use App\Services\Ai\PlanItemAiResponse;
 use Illuminate\Support\Collection;
 
 /*
-|--------------------------------------------------------------------------
-| FakeAiClient test double verification
-|--------------------------------------------------------------------------
-|
-| Verifies that FakeAiClient correctly
-| Returns configured responses + captures input state per pipeline.
-| Plays FIFO sequences for multi-call scenarios.
-| Throws configured exceptions (callCount incremented before throw).
-| Captures persona payload.
-|
-| Tests use factories but do NOT require Http::fake — FakeAiClient is
-| entirely in-memory. RefreshDatabase is used (set globally in Pest.php).
-*/
+ |--------------------------------------------------------------------------
+ | FakeAiClient test double verification
+ |--------------------------------------------------------------------------
+ |
+ | Verifies that FakeAiClient correctly
+ | Returns configured responses + captures input state per pipeline.
+ | Plays FIFO sequences for multi-call scenarios.
+ | Throws configured exceptions (callCount incremented before throw).
+ | Captures persona payload.
+ |
+ | Tests use factories but do NOT require Http::fake — FakeAiClient is
+ | entirely in-memory. RefreshDatabase is used (set globally in Pest.php).
+ */
 
 function makeMetrics(string $model = 'claude-haiku-4-5'): AiUsageMetrics
 {
@@ -91,7 +91,7 @@ it('plays generatePlanItem sequence and exhausts correctly', function () {
     expect($res1->rawText)->toBe('{"caption_short":"first"}');
     expect($res2->rawText)->toBe('{"caption_short":"second"}');
 
- // Third call exceeds sequence — must throw RuntimeException.
+    // Third call exceeds sequence — must throw RuntimeException.
     expect(fn () => $fake->generatePlanItem($brand, $brief, $idea, PlanFormat::Story))
         ->toThrow(\RuntimeException::class, 'sequence exhausted');
 });
@@ -153,7 +153,7 @@ it('regenerateCaption returns response and increments counter', function () {
     $expected = new PlanItemAiResponse(rawText: '{"caption_short":"regen"}', usage: makeMetrics());
     $fake->setRegenCaptionResponse($expected);
 
- // Build a minimal PlanItem stub without touching the DB for the fake test.
+    // Build a minimal PlanItem stub without touching the DB for the fake test.
     $plan = \App\Models\EditorialPlan::factory()->for($brand)->create();
     $item = PlanItem::factory()->for($plan, 'plan')->create();
 

@@ -25,8 +25,8 @@ use App\Models\User;
 class BrandPolicy
 {
     /**
- * Anyone authenticated may "view any" — the list is filtered by the
- * Layer 1 Global Scope, not by this gate.
+     * Anyone authenticated may "view any" — the list is filtered by the
+     * Layer 1 Global Scope, not by this gate.
      */
     public function viewAny(User $user): bool
     {
@@ -34,7 +34,7 @@ class BrandPolicy
     }
 
     /**
- * View a specific brand — only the owner.
+     * View a specific brand — only the owner.
      */
     public function view(User $user, Brand $brand): bool
     {
@@ -42,10 +42,10 @@ class BrandPolicy
     }
 
     /**
- * Create a new brand — delegates to the User model's free-tier check.
- *
- * Pro users: always true (no quota).
- * Free users: true iff they own fewer than 1 brand.
+     * Create a new brand — delegates to the User model's free-tier check.
+     *
+     * Pro users: always true (no quota).
+     * Free users: true iff they own fewer than 1 brand.
      */
     public function create(User $user): bool
     {
@@ -53,7 +53,7 @@ class BrandPolicy
     }
 
     /**
- * Update a brand — only the owner.
+     * Update a brand — only the owner.
      */
     public function update(User $user, Brand $brand): bool
     {
@@ -61,7 +61,7 @@ class BrandPolicy
     }
 
     /**
- * Soft-delete (archive) a brand — only the owner.
+     * Soft-delete (archive) a brand — only the owner.
      */
     public function delete(User $user, Brand $brand): bool
     {
@@ -69,7 +69,7 @@ class BrandPolicy
     }
 
     /**
- * Restore a soft-deleted brand — only the owner.
+     * Restore a soft-deleted brand — only the owner.
      */
     public function restore(User $user, Brand $brand): bool
     {
@@ -77,11 +77,11 @@ class BrandPolicy
     }
 
     /**
- * Force-delete (hard remove) a brand — only the owner.
- *
- * does not surface a forceDelete action; this method is
- * included for completeness so the Policy is exhaustive for any
- * future hard-delete flow.
+     * Force-delete (hard remove) a brand — only the owner.
+     *
+     * does not surface a forceDelete action; this method is
+     * included for completeness so the Policy is exhaustive for any
+     * future hard-delete flow.
      */
     public function forceDelete(User $user, Brand $brand): bool
     {

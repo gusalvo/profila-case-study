@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Http;
  */
 
 beforeEach(function () {
- // Pin a deterministic API key so we can assert on it.
+    // Pin a deterministic API key so we can assert on it.
     config()->set('services.anthropic.api_key', 'test-key-do-not-log');
     config()->set('services.anthropic.base_url', 'https://api.anthropic.com');
     config()->set('services.anthropic.model', 'claude-sonnet-4-6');

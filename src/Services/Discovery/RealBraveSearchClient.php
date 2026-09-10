@@ -31,17 +31,17 @@ class RealBraveSearchClient implements BraveSearchClient
     private const ENDPOINT = 'https://api.search.brave.com/res/v1/web/search';
 
     /**
- * Execute a Brave web search query and return normalized BraveResult DTOs.
- *
- * NEVER throws — returns empty array on any failure (DISC-01).
- *
- * @return list<BraveResult>
+     * Execute a Brave web search query and return normalized BraveResult DTOs.
+     *
+     * NEVER throws — returns empty array on any failure (DISC-01).
+     *
+     * @return list<BraveResult>
      */
     public function search(string $query): array
     {
         $apiKey = config('services.brave.api_key');
 
- //missing/empty key → graceful empty, no exception
+        //missing/empty key → graceful empty, no exception
         if (empty($apiKey)) {
             Log::warning('BraveSearchClient: api_key is not configured — returning empty result (DISC-01).', [
                 'query' => $query,
@@ -89,7 +89,7 @@ class RealBraveSearchClient implements BraveSearchClient
             return [];
         }
 
- //Brave response path is `web.results`, NOT `results`.
+        //Brave response path is `web.results`, NOT `results`.
         $rawResults = $response->json('web.results', []);
 
         $results = [];

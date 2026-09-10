@@ -87,7 +87,7 @@ PHP 8.3 · Laravel 11 · Livewire 3 con Volt · Tailwind CSS 4 · MariaDB in pro
 
 ## Cosa non è incluso
 
-I template di prompt e i profili di settore non fanno parte degli estratti. Restano fuori anche l'impalcatura dell'applicazione, le migrazioni, le viste e gli script di deploy.
+I template di prompt e i profili di settore non fanno parte degli estratti, e la lista completa delle espressioni filtrate da `PrudentLanguageGate` è ridotta a due voci di esempio. Restano fuori anche l'impalcatura dell'applicazione, le migrazioni, le viste e gli script di deploy.
 
 ---
 

@@ -34,8 +34,8 @@ use App\Models\User;
 class BrandBriefPolicy
 {
     /**
- * List/index briefs for a given brand — only the brand owner.
- * Gate signature: `$user->can('viewAny', [BrandBrief::class, $brand])`.
+     * List/index briefs for a given brand — only the brand owner.
+     * Gate signature: `$user->can('viewAny', [BrandBrief::class, $brand])`.
      */
     public function viewAny(User $user, Brand $brand): bool
     {
@@ -43,8 +43,8 @@ class BrandBriefPolicy
     }
 
     /**
- * View a specific brief — only the owner of the parent brand
- * (transitive ownership via `$brief->brand->user_id`).
+     * View a specific brief — only the owner of the parent brand
+     * (transitive ownership via `$brief->brand->user_id`).
      */
     public function view(User $user, BrandBrief $brief): bool
     {
@@ -52,9 +52,9 @@ class BrandBriefPolicy
     }
 
     /**
- * Create a new brief on the given Brand — only the brand owner.
- * (Free-tier cap on briefs is NOT in MVP — versioning allows
- * unlimited regens; rate limiting happens at the AI call boundary.)
+     * Create a new brief on the given Brand — only the brand owner.
+     * (Free-tier cap on briefs is NOT in MVP — versioning allows
+     * unlimited regens; rate limiting happens at the AI call boundary.)
      */
     public function create(User $user, Brand $brand): bool
     {
@@ -62,9 +62,9 @@ class BrandBriefPolicy
     }
 
     /**
- * Regenerate a brief (produce a new version) — only the brand owner.
- * Same authority as `create`; the distinction is semantic (UI shows
- * "Rigenera brief" instead of "Genera Brand Brief" when ≥1 brief exists).
+     * Regenerate a brief (produce a new version) — only the brand owner.
+     * Same authority as `create`; the distinction is semantic (UI shows
+     * "Rigenera brief" instead of "Genera Brand Brief" when ≥1 brief exists).
      */
     public function regenerate(User $user, Brand $brand): bool
     {
@@ -72,10 +72,10 @@ class BrandBriefPolicy
     }
 
     /**
- * Confirm the brief — only the owner of the parent brand AND only when
- * the brief is still in Draft status. invariant: an already-confirmed
- * brief cannot be re-confirmed (would mutate a finalized record; the user
- * must Rigenera and confirm the new draft instead).
+     * Confirm the brief — only the owner of the parent brand AND only when
+     * the brief is still in Draft status. invariant: an already-confirmed
+     * brief cannot be re-confirmed (would mutate a finalized record; the user
+     * must Rigenera and confirm the new draft instead).
      */
     public function confirm(User $user, BrandBrief $brief): bool
     {

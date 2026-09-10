@@ -21,11 +21,11 @@ use App\Services\Discovery\DTOs\BusinessCandidate;
 final class DemoBraveSearchClient implements BraveSearchClient
 {
     /**
- * Returns an empty array — no HTTP call issued in demo mode.
- *
- * NEVER throws — returns empty array (DISC-01).
- *
- * @return list<\App\Services\Discovery\DTOs\BraveResult>
+     * Returns an empty array — no HTTP call issued in demo mode.
+     *
+     * NEVER throws — returns empty array (DISC-01).
+     *
+     * @return list<\App\Services\Discovery\DTOs\BraveResult>
      */
     public function search(string $query): array
     {
@@ -33,12 +33,12 @@ final class DemoBraveSearchClient implements BraveSearchClient
     }
 
     /**
- * Return per-vertical BusinessCandidate fixtures for demo mode.
- *
- * Called by SimilarBusinessFinder::find when demo mode is active.
- * Uses realistic Italian business names / URLs / reasons per category.
- *
- * @return list<BusinessCandidate>
+     * Return per-vertical BusinessCandidate fixtures for demo mode.
+     *
+     * Called by SimilarBusinessFinder::find when demo mode is active.
+     * Uses realistic Italian business names / URLs / reasons per category.
+     *
+     * @return list<BusinessCandidate>
      */
     public function candidatesFor(Brand $brand): array
     {

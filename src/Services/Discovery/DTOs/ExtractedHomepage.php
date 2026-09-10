@@ -17,14 +17,14 @@ namespace App\Services\Discovery\DTOs;
 final readonly class ExtractedHomepage
 {
     /**
- * @param array<string, mixed> $fields CONF-05 whitelist fields only
+     * @param array<string, mixed> $fields CONF-05 whitelist fields only
      */
     public function __construct(
         public array $fields,
     ) {}
 
     /**
- * @return array<string, mixed>
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {

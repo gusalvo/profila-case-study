@@ -38,18 +38,18 @@ class HashtagCount implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
- // Empty / null hashtags field is always valid (nullable in rules)
+        // Empty / null hashtags field is always valid (nullable in rules)
         if ($value === null || $value === '') {
- // GBP: empty is correct (no hashtags allowed)
- // All other: empty is fine (operator may not want hashtags)
+            // GBP: empty is correct (no hashtags allowed)
+            // All other: empty is fine (operator may not want hashtags)
             return;
         }
 
- // Count hashtag tokens: words starting with # (Unicode-aware)
+        // Count hashtag tokens: words starting with # (Unicode-aware)
         preg_match_all('/#\S+/u', (string) $value, $matches);
         $count = count($matches[0]);
 
- // GBP Post: strictly 0 hashtags
+        // GBP Post: strictly 0 hashtags
         if ($this->format === PlanFormat::GbpPost) {
             if ($count > 0) {
                 $fail(__('I post Google Business Profile non devono contenere hashtag.'));
@@ -57,7 +57,7 @@ class HashtagCount implements ValidationRule
             return;
         }
 
- // Story: max 3 (optional — 0 is OK)
+        // Story: max 3 (optional — 0 is OK)
         if ($this->format === PlanFormat::Story) {
             if ($count > 3) {
                 $fail(__('Le Stories possono avere al massimo 3 hashtag.'));
@@ -65,7 +65,7 @@ class HashtagCount implements ValidationRule
             return;
         }
 
- // LinkedIn channel: 3-5 hashtags
+        // LinkedIn channel: 3-5 hashtags
         if ($this->isLinkedInChannel()) {
             if ($count < 3 || $count > 5) {
                 $fail(__('Inserisci tra 3 e 5 hashtag per LinkedIn.'));
@@ -73,7 +73,7 @@ class HashtagCount implements ValidationRule
             return;
         }
 
- // X / Threads: hashtags go inline in caption_short — field should be empty
+        // X / Threads: hashtags go inline in caption_short — field should be empty
         if ($this->isXOrThreadsChannel()) {
             if ($count > 0) {
                 $fail(__('Per X e Threads, includi gli hashtag direttamente nella caption breve.'));
@@ -81,15 +81,15 @@ class HashtagCount implements ValidationRule
             return;
         }
 
- // Instagram / Facebook / Post / Reel / Carousel (general): 8-15
- // Cap at 15 maximum; allow 0 for drafts being filled
+        // Instagram / Facebook / Post / Reel / Carousel (general): 8-15
+        // Cap at 15 maximum; allow 0 for drafts being filled
         if ($count > 15) {
             $fail(__('Inserisci tra 8 e 15 hashtag per Instagram/Facebook.'));
         }
     }
 
     /**
- * Detect LinkedIn channel from $channel string (case-insensitive).
+     * Detect LinkedIn channel from $channel string (case-insensitive).
      */
     protected function isLinkedInChannel(): bool
     {
@@ -98,7 +98,7 @@ class HashtagCount implements ValidationRule
     }
 
     /**
- * Detect X or Threads channel from $channel string (case-insensitive).
+     * Detect X or Threads channel from $channel string (case-insensitive).
      */
     protected function isXOrThreadsChannel(): bool
     {

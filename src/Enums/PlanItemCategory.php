@@ -34,7 +34,7 @@ enum PlanItemCategory: string
     case BrandValori    = 'brand_valori';
 
     /**
- * Etichetta italiana per dropdown e badge categoria.
+     * Etichetta italiana per dropdown e badge categoria.
      */
     public function label(): string
     {
@@ -50,13 +50,13 @@ enum PlanItemCategory: string
     }
 
     /**
- * Classi Tailwind per bordo sinistro (card), badge e chip.
- *
- * Stringhe verbatim da the design spec colour table.
- * MAI concatenazione dinamica — Tailwind 4 purge scansiona stringhe
- * letterali (anti-stack note).
- *
- * @return array{border: string, badge: string, chip: string}
+     * Classi Tailwind per bordo sinistro (card), badge e chip.
+     *
+     * Stringhe verbatim da the design spec colour table.
+     * MAI concatenazione dinamica — Tailwind 4 purge scansiona stringhe
+     * letterali (anti-stack note).
+     *
+     * @return array{border: string, badge: string, chip: string}
      */
     public function color(): array
     {
@@ -100,9 +100,9 @@ enum PlanItemCategory: string
     }
 
     /**
- * Opzioni per dropdown: ['servizi' => 'Servizi',...].
- *
- * @return array<string, string>
+     * Opzioni per dropdown: ['servizi' => 'Servizi',...].
+     *
+     * @return array<string, string>
      */
     public static function options(): array
     {

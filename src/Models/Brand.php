@@ -39,12 +39,12 @@ class Brand extends Model
     use HasFactory, HasSlug, SoftDeletes;
 
     /**
- * Mass-assignable fields. NOTE: `user_id` and `slug` are NOT included.
- *
- * `language_locked` is included so BrandForm::update can persist the
- * explicit-user-choice signal (/).
- *
- * @var list<string>
+     * Mass-assignable fields. NOTE: `user_id` and `slug` are NOT included.
+     *
+     * `language_locked` is included so BrandForm::update can persist the
+     * explicit-user-choice signal (/).
+     *
+     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -63,12 +63,12 @@ class Brand extends Model
     ];
 
     /**
- * Attribute casts.
- *
- * Uses the Laravel 11 `casts()` method (preferred over the `$casts`
- * property).
- *
- * @return array<string, string>
+     * Attribute casts.
+     *
+     * Uses the Laravel 11 `casts()` method (preferred over the `$casts`
+     * property).
+     *
+     * @return array<string, string>
      */
     protected function casts(): array
     {
@@ -84,25 +84,25 @@ class Brand extends Model
     }
 
     /**
- * Detected social channels (#6 — "canali rilevati").
- *
- * The only ground-truth signal of which platforms the brand actually uses
- * is the per-channel URL captured at scan time (ig/fb — no URL column
- * exists for LinkedIn/Threads/X, so those can never be "detected"). Returns
- * the {@see \App\Enums\PlanChannel} values for channels with a non-empty URL.
- *
- * GBP (Google Business) is NOT a content channel here (2026-06-06 product
- * review — "i post Google Business non hanno senso"). The `gbp_url` brand
- * field is still stored, but it never drives content generation: Profila does
- * not produce GBP posts. GBP therefore never appears in detected channels
- * wizard pre-selection, the ideas channel constraint, or the PDF.
- *
- * Fallback: a brand with no social URL at all (manual mode) defaults to
- * Instagram + Facebook — the two near-universal channels for local SMBs
- * so content generation always has a sane, non-empty constraint and never
- * silently falls back to "all six" (the #6 bug).
- *
- * @return array<int, string> PlanChannel values, e.g. ['instagram', 'facebook'].
+     * Detected social channels (#6 — "canali rilevati").
+     *
+     * The only ground-truth signal of which platforms the brand actually uses
+     * is the per-channel URL captured at scan time (ig/fb — no URL column
+     * exists for LinkedIn/Threads/X, so those can never be "detected"). Returns
+     * the {@see \App\Enums\PlanChannel} values for channels with a non-empty URL.
+     *
+     * GBP (Google Business) is NOT a content channel here (2026-06-06 product
+     * review — "i post Google Business non hanno senso"). The `gbp_url` brand
+     * field is still stored, but it never drives content generation: Profila does
+     * not produce GBP posts. GBP therefore never appears in detected channels
+     * wizard pre-selection, the ideas channel constraint, or the PDF.
+     *
+     * Fallback: a brand with no social URL at all (manual mode) defaults to
+     * Instagram + Facebook — the two near-universal channels for local SMBs
+     * so content generation always has a sane, non-empty constraint and never
+     * silently falls back to "all six" (the #6 bug).
+     *
+     * @return array<int, string> PlanChannel values, e.g. ['instagram', 'facebook'].
      */
     public function detectedChannels(): array
     {
@@ -117,11 +117,11 @@ class Brand extends Model
     }
 
     /**
- * Boot the model — register Layer 1 Global Scope `owner`.
- *
- * The scope filters `user_id = auth()->id()` only when a user is logged
- * in; in tests (factory creation without `actingAs`) the scope is a
- * no-op so cross-tenant setup works.
+     * Boot the model — register Layer 1 Global Scope `owner`.
+     *
+     * The scope filters `user_id = auth()->id()` only when a user is logged
+     * in; in tests (factory creation without `actingAs`) the scope is a
+     * no-op so cross-tenant setup works.
      */
     protected static function booted(): void
     {
@@ -133,10 +133,10 @@ class Brand extends Model
     }
 
     /**
- * Slug options — auto from `name`, immutable, per-user-unique.
- *
- * Without `extraScope`, slugs would be globally
- * unique and two users with the same brand name would conflict.
+     * Slug options — auto from `name`, immutable, per-user-unique.
+     *
+     * Without `extraScope`, slugs would be globally
+     * unique and two users with the same brand name would conflict.
      */
     public function getSlugOptions(): SlugOptions
     {
@@ -149,7 +149,7 @@ class Brand extends Model
     }
 
     /**
- * Use `slug` (not `id`) as the route key for /brands/{slug} URLs.
+     * Use `slug` (not `id`) as the route key for /brands/{slug} URLs.
      */
     public function getRouteKeyName(): string
     {
@@ -157,9 +157,9 @@ class Brand extends Model
     }
 
     /**
- * Owning user.
- *
- * @return BelongsTo<User, Brand>
+     * Owning user.
+     *
+     * @return BelongsTo<User, Brand>
      */
     public function user(): BelongsTo
     {
@@ -167,13 +167,13 @@ class Brand extends Model
     }
 
     /**
- * Knowledge-base sources owned by this brand.
- *
- * BrandSource has no Global Scope of its own — Layer 1 isolation is
- * inherited transitively through this relation (. Always look up sources via `$brand->sources()`, never
- * `BrandSource::find()` from Livewire components.
- *
- * @return HasMany<BrandSource>
+     * Knowledge-base sources owned by this brand.
+     *
+     * BrandSource has no Global Scope of its own — Layer 1 isolation is
+     * inherited transitively through this relation (. Always look up sources via `$brand->sources()`, never
+     * `BrandSource::find()` from Livewire components.
+     *
+     * @return HasMany<BrandSource>
      */
     public function sources(): HasMany
     {
@@ -181,14 +181,14 @@ class Brand extends Model
     }
 
     /**
- * AI-generated briefs versioned per brand.
- *
- * BrandBrief has no Global Scope of its own — Layer 1 isolation is
- * inherited transitively through this relation.
- * Always look up briefs via `$brand->briefs()`, never
- * `BrandBrief::find()` from Livewire components.
- *
- * @return HasMany<BrandBrief>
+     * AI-generated briefs versioned per brand.
+     *
+     * BrandBrief has no Global Scope of its own — Layer 1 isolation is
+     * inherited transitively through this relation.
+     * Always look up briefs via `$brand->briefs()`, never
+     * `BrandBrief::find()` from Livewire components.
+     *
+     * @return HasMany<BrandBrief>
      */
     public function briefs(): HasMany
     {
@@ -196,14 +196,14 @@ class Brand extends Model
     }
 
     /**
- * Content ideas generated for this brand.
- *
- * ContentIdea has no Global Scope of its own — Layer 1 isolation is
- * inherited transitively through this relation.
- * Always look up ideas via `$brand->ideas()`, never
- * `ContentIdea::find()` from Livewire components.
- *
- * @return HasMany<ContentIdea>
+     * Content ideas generated for this brand.
+     *
+     * ContentIdea has no Global Scope of its own — Layer 1 isolation is
+     * inherited transitively through this relation.
+     * Always look up ideas via `$brand->ideas()`, never
+     * `ContentIdea::find()` from Livewire components.
+     *
+     * @return HasMany<ContentIdea>
      */
     public function ideas(): HasMany
     {
@@ -211,11 +211,11 @@ class Brand extends Model
     }
 
     /**
- * Durable anti-repetition memory — every idea_text ever generated for this
- * brand, surviving board clears (2026-06-04). Feeds the IdeaGenerator
- * avoid-list. Layer 1 transitive (no Global Scope on GeneratedIdeaText).
- *
- * @return HasMany<GeneratedIdeaText>
+     * Durable anti-repetition memory — every idea_text ever generated for this
+     * brand, surviving board clears (2026-06-04). Feeds the IdeaGenerator
+     * avoid-list. Layer 1 transitive (no Global Scope on GeneratedIdeaText).
+     *
+     * @return HasMany<GeneratedIdeaText>
      */
     public function generatedIdeaTexts(): HasMany
     {
@@ -223,14 +223,14 @@ class Brand extends Model
     }
 
     /**
- * Editorial plans generated for this brand.
- *
- * EditorialPlan has no Global Scope of its own — Layer 1 isolation is
- * inherited transitively through this relation.
- * Always look up plans via `$brand->plans()`, never
- * `EditorialPlan::find()` from Livewire components.
- *
- * @return HasMany<EditorialPlan>
+     * Editorial plans generated for this brand.
+     *
+     * EditorialPlan has no Global Scope of its own — Layer 1 isolation is
+     * inherited transitively through this relation.
+     * Always look up plans via `$brand->plans()`, never
+     * `EditorialPlan::find()` from Livewire components.
+     *
+     * @return HasMany<EditorialPlan>
      */
     public function plans(): HasMany
     {
@@ -238,16 +238,16 @@ class Brand extends Model
     }
 
     /**
- * AI-generated strategic analysis for this brand.
- *
- * BrandAnalysis has no Global Scope of its own — Layer 1 isolation is
- * inherited transitively through this relation (Pattern 2).
- * Always look up analysis via `$brand->analysis()`, never
- * `BrandAnalysis::find()` from Livewire components.
- *
- * HasOne (not HasMany) — unique(brand_id) enforces one row per brand.
- *
- * @return HasOne<BrandAnalysis>
+     * AI-generated strategic analysis for this brand.
+     *
+     * BrandAnalysis has no Global Scope of its own — Layer 1 isolation is
+     * inherited transitively through this relation (Pattern 2).
+     * Always look up analysis via `$brand->analysis()`, never
+     * `BrandAnalysis::find()` from Livewire components.
+     *
+     * HasOne (not HasMany) — unique(brand_id) enforces one row per brand.
+     *
+     * @return HasOne<BrandAnalysis>
      */
     public function analysis(): HasOne
     {
@@ -255,13 +255,13 @@ class Brand extends Model
     }
 
     /**
- * Returns the latest confirmed BrandBrief for this brand, or null if none.
- *
- * Used by IdeaGenerator and EditorialPlanPolicy::create as the
- * pre-condition check — Idea Board is only accessible when a brief has
- * been confirmed.
- *
- * @return BrandBrief|null
+     * Returns the latest confirmed BrandBrief for this brand, or null if none.
+     *
+     * Used by IdeaGenerator and EditorialPlanPolicy::create as the
+     * pre-condition check — Idea Board is only accessible when a brief has
+     * been confirmed.
+     *
+     * @return BrandBrief|null
      */
     public function latestConfirmedBrief(): ?BrandBrief
     {
