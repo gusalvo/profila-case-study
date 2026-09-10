@@ -18,13 +18,13 @@ use App\Models\PlanItem;
  * each failure mode.
  *
  * Mitigates (forgetting to log on exception paths)
- * being the single sink — the orchestrator calls log() in every catch + the
+ * being the single sink — the orchestrator calls log in every catch + the
  * success path.
  *
  * factory methods
- * forIdeas() — pipeline='ideas' (is_regen flag, no plan_id)
- * forPlanItem() — pipeline='plan_item', editorial_plan_id set
- * forRegen() — pipeline='regen_caption'|'regen_visual'|'regen_full'
+ * forIdeas — pipeline='ideas' (is_regen flag, no plan_id)
+ * forPlanItem — pipeline='plan_item', editorial_plan_id set
+ * forRegen — pipeline='regen_caption'|'regen_visual'|'regen_full'
  *
  * cost_usd is computed at write-time via {@see AiCostCalculator::compute}
  *. Storing the decimal lets future SUM aggregations
@@ -107,7 +107,7 @@ final class AiUsageLogger
     /**
  * Build an AiUsageRecord for the first_impression pipeline (Haiku).
  *
- * Mirrors forIdeas() (pipeline='ideas') with first_impression pipeline.
+ * Mirrors forIdeas (pipeline='ideas') with first_impression pipeline.
  * `brand_brief_id` is null — no BrandBrief exists at stage 1.
  * `editorial_plan_id` is null — not plan-bound.
  * 'first_impression' is 16 chars — fits VARCHAR(30), no migration needed.
@@ -128,7 +128,7 @@ final class AiUsageLogger
             brandId: $brand->id,
             brandBriefId: null,
             pipeline: 'first_impression',    // 16 chars — fits VARCHAR(30)
-            model: config('services.anthropic.model'),      // promoted from Haiku to Sonnet (Plan 02)
+            model: config('services.anthropic.model'),      // promoted from Haiku to Sonnet
             inputTokens: $metrics->inputTokens,
             outputTokens: $metrics->outputTokens,
             cacheReadTokens: $metrics->cacheReadTokens,

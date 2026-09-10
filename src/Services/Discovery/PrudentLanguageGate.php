@@ -15,8 +15,8 @@ use Normalizer;
  * Matching is
  * Substring-based (phrase anywhere in the text).
  * Accent-insensitive via NFD accent-fold + mb_strtolower (Italian-safe, multi-byte).
- * The normalize() implementation is VERBATIM from TerritoryPresenceMapper::normalize()
- * (the codebase-canonical accent-fold, per 26-PATTERNS.md shared-patterns section).
+ * The normalize implementation is the codebase-canonical accent-fold, copied
+ * verbatim from TerritoryPresenceMapper::normalize().
  *
  * Forbidden phrases are stored in their natural form (some already folded)
  * both the input text and each phrase are normalized at runtime, so accented
@@ -27,8 +27,8 @@ final class PrudentLanguageGate
     /**
  * forbidden phrases.
  *
- * Stored in natural Italian; normalized at runtime via normalize().
- * Update this list only via ADR amendment — it is a locked product decision.
+ * Stored in natural Italian; normalized at runtime via normalize.
+ * Update this list only through an explicit product decision.
  *
  * @var list<string>
      */
@@ -69,10 +69,10 @@ final class PrudentLanguageGate
     /**
  * Normalize text to lowercase accent-stripped form for Italian string matching.
  *
- * VERBATIM copy from TerritoryPresenceMapper::normalize() — the codebase-canonical
+ * verbatim copy from TerritoryPresenceMapper::normalize — the codebase-canonical
  * NFD accent-fold (NFD decompose → strip combining marks → mb_strtolower UTF-8).
  *
- * @see \App\Services\Discovery\TerritoryPresenceMapper::normalize()
+ * @see \App\Services\Discovery\TerritoryPresenceMapper::normalize
      */
     private function normalize(string $text): string
     {

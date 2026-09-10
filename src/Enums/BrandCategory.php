@@ -12,9 +12,9 @@ namespace App\Enums;
  * tour_operator, local, other). I casi rimossi sono hard-removed (non
  * deprecated). La migrazione dati 8→11 è in -07.
  *
- * Batch-1 deep verticals (isDeepVertical() == true)
+ * Batch-1 deep verticals (isDeepVertical == true)
  * StrutturaRicettiva, RistoranteFood, Beauty, Professionista
- * Batch-2 generic (isDeepVertical() == false — NEVER "specializzato")
+ * Batch-2 generic (isDeepVertical == false — NEVER "specializzato")
  * TourEsperienze, Creator, WeddingEventi, Immobiliare, FitnessFormazione
  * NegozioRetail, Altro
  *
@@ -23,7 +23,7 @@ namespace App\Enums;
  */
 enum BrandCategory: string
 {
- // Declaration order MUST match dropdown order (options() uses cases()).
+ // Declaration order MUST match dropdown order (options uses cases()).
  // Common/deep-verticals first, Altro always last.
     case StrutturaRicettiva  = 'struttura_ricettiva';   // 19 chars — VARCHAR(30) safe
     case RistoranteFood      = 'ristorante_food';
@@ -76,7 +76,7 @@ enum BrandCategory: string
     }
 
     /**
- * Dropdown options helper: ['struttura_ricettiva' => 'Struttura ricettiva', ...].
+ * Dropdown options helper: ['struttura_ricettiva' => 'Struttura ricettiva',..].
  *
  * Declaration order drives dropdown order — no extra sorting needed.
  *

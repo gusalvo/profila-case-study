@@ -5,10 +5,9 @@ namespace App\Enums;
 /**
  * Categoria strategica di un PlanItem.
  *
- * Stored as VARCHAR(30) on `plan_items.category` NULL (
- * mai `$table->enum()`). NULL = in attesa di backfill.
+ * Stored as VARCHAR(30) on `plan_items.category` NULL (mai `$table->enum()`). NULL = in attesa di backfill.
  *
- * 7 casi bloccati (CONTEXT / UI-SPEC Category Color Token Table)
+ * 7 casi bloccati
  * servizi → Servizi
  * territorio → Territorio
  * recensioni → Recensioni
@@ -17,12 +16,12 @@ namespace App\Enums;
  * educativo → Educativo
  * brand_valori → Brand/Valori
  *
- * color() restituisce array{border, badge, chip} con le classi Tailwind
- * VERBATIM dalla UI-SPEC — NESSUNA concatenazione dinamica 'bg-'.$x.'-100'
+ * color restituisce array{border, badge, chip} con le classi Tailwind
+ * verbatim — NESSUNA concatenazione dinamica 'bg-'.$x.'-100'
  * che Tailwind 4 purgerebbe.
  *
  * Mirrors PlanItemContentStatus.php structure (backed string enum
- * label() match, static options() via collect()->mapWithKeys()).
+ * label match, static options via collect()->mapWithKeys()).
  */
 enum PlanItemCategory: string
 {
@@ -53,7 +52,7 @@ enum PlanItemCategory: string
     /**
  * Classi Tailwind per bordo sinistro (card), badge e chip.
  *
- * Stringhe VERBATIM da UI-SPEC Category Color Token Table.
+ * Stringhe verbatim da the design spec colour table.
  * MAI concatenazione dinamica — Tailwind 4 purge scansiona stringhe
  * letterali (anti-stack note).
  *
@@ -101,7 +100,7 @@ enum PlanItemCategory: string
     }
 
     /**
- * Opzioni per dropdown: ['servizi' => 'Servizi', ...].
+ * Opzioni per dropdown: ['servizi' => 'Servizi',..].
  *
  * @return array<string, string>
      */

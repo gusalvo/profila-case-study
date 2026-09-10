@@ -12,11 +12,10 @@ use Illuminate\Support\Facades\Gate;
  * Verifies that
  * view/update/delete/restore/forceDelete enforce $brand->user_id === $user->id
  * viewAny is open (the list is filtered by the Layer 1 Global Scope)
- * create delegates to User::canCreateBrand() (single source of truth
- *), so the free-tier 1-brand limit and Pro short-circuit are
+ * create delegates to User::canCreateBrand (single source of truth), so the free-tier 1-brand limit and Pro short-circuit are
  * both honoured at the Policy boundary.
  *
- * NOTE: Brand factory creation in cross-user tests is preceded by auth()->logout()
+ * NOTE: Brand factory creation in cross-user tests is preceded by auth()->logout
  * so the Layer 1 Global Scope does NOT filter out the
  * created row during setup.
  */

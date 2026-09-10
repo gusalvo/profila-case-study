@@ -15,9 +15,9 @@ use InvalidArgumentException;
  * Rates are per MILLION tokens (the Anthropic pricing page convention). The
  * formula divides the weighted sum by 1_000_000 at the end so the return
  * value is USD with sub-cent precision (stored as `decimal(8,6)`
- * `ai_usage_logs.cost_usd` by Plan 04).
+ * `ai_usage_logs.cost_usd` by).
  *
- *compute at write-time, store on the row (NOT a generated column) so
+ * Compute at write-time, store on the row (NOT a generated column) so
  * we can SUM cost_usd without recomputing every time and rates can change
  * without invalidating historical rows.
  */
@@ -37,7 +37,7 @@ final class AiCostCalculator
             'output' => 10.00,
         ],
  // Retained after the migration: ai_usage_logs rows written
- // before 2026-08-26 name this model, and compute() throws on any id
+ // before 2026-08-26 name this model, and compute throws on any id
  // absent from this table. Removing it would break historical costing.
         'claude-sonnet-4-6' => [
             'input' => 3.00,

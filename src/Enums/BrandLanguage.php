@@ -5,8 +5,7 @@ namespace App\Enums;
 /**
  * Brand content language.
  *
- * Stored as VARCHAR(30) on `brands.language` DEFAULT 'it'
- *.
+ * Stored as VARCHAR(30) on `brands.language` DEFAULT 'it'.
  *
  * `it` → captions monolingual Italian.
  * `en` → captions monolingual English.
@@ -32,7 +31,7 @@ enum BrandLanguage: string
     }
 
     /**
- * Dropdown options helper: ['it' => 'Italiano', ...].
+ * Dropdown options helper: ['it' => 'Italiano',..].
  *
  * @return array<string, string>
      */

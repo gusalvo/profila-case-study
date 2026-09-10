@@ -31,22 +31,22 @@ use Livewire\Livewire;
 | foreign rows from queries.
 | Layer 2 (BrandSourcePolicy) — even with Layer 1 bypass, the policy
 | denies non-owners.
-| Layer 3 (auth()->user()->brands()->where('slug', ...)->firstOrFail()
+| Layer 3 (auth()->user()->brands()->where('slug',..)->firstOrFail
 | every Livewire mount()) → ModelNotFoundException → 404 at HTTP boundary.
 |
 | Assertion convention (IsolationTest pattern)
 | Cross-tenant view/update → 404 (assertNotFound), NOT 403 (assertForbidden).
 | Layer 3 hides existence — a foreign slug looks like a non-existent slug.
 |
-| We use HTTP-level requests ($this->get(route(...))) for routes so the
+| We use HTTP-level requests ($this->get(route(..))) for routes so the
 | Laravel exception handler converts ModelNotFoundException → 404 response.
 | For Livewire actions where the exception propagates straight through the
-| test harness (per), we use expect()->toThrow(...).
+| test harness (per), we use expect()->toThrow(..).
 |
 | Setup convention
-| ALWAYS call auth()->logout() before BrandSource::factory()->for($otherBrand)
-| >create(). Even though BrandSource registers no Global Scope itself, the
-| parent Brand factory respects auth()->id() during fixture creation; the
+| ALWAYS call auth()->logout before BrandSource::factory()->for($otherBrand)
+| >create. Even though BrandSource registers no Global Scope itself, the
+| parent Brand factory respects auth()->id during fixture creation; the
 | safe pattern is logout → factory → re-actingAs.
 */
 
@@ -61,7 +61,7 @@ it('returns 404 when user A tries to list user B sources via index route', funct
     ]);
 
  // HTTP-level GET so Laravel's exception handler maps the Layer 3
- // firstOrFail() ModelNotFoundException to a 404 response.
+ // firstOrFail ModelNotFoundException to a 404 response.
     $this->actingAs($userA)
         ->get(route('sources.index', ['brandSlug' => $brandB->slug]))
         ->assertNotFound();
@@ -115,7 +115,7 @@ it('returns 404 when user A tries to edit user B specific source via edit route'
 });
 
 it('user A cannot delete user B source via Layer 2 Policy::delete (Gate facade)', function () {
- // The Livewire path through Index::destroy() goes through a route-model
+ // The Livewire path through Index::destroy goes through a route-model
  // binding which Brand's Layer 1 scope blocks BEFORE the Policy fires
  // (the parent brand is null for userA → null-deref). The canonical
  // cross-tenant authority is the Policy — and at that layer, the deny
@@ -151,7 +151,7 @@ it('user A cannot trigger addFromExample on user B brand', function () {
     $brandB = Brand::factory()->for($userB)->create();
 
  // The Livewire test harness propagates ModelNotFoundException
- // mount() — addFromExample() is never reached because Layer 3 fires
+ // mount — addFromExample is never reached because Layer 3 fires
  // first. Asserting on the exception is the most direct evidence that
  // the attack surface is blocked before policy/payload code can run.
     expect(fn () => Livewire::actingAs($userA)
@@ -168,7 +168,7 @@ it('regression: factory-for-other-brand requires auth()->logout() first', functi
  // While userA is acting, factory-creating a BrandSource on userB's brand
  // works because BrandSource has NO Global Scope (Layer 1 is transitive
  // via the parent Brand and only filters SELECTs, not INSERTs). The safe
- // pattern across the suite is: auth()->logout() BEFORE the factory chain
+ // pattern across the suite is: auth()->logout BEFORE the factory chain
  // then re-actingAs in the assertion phase — same idiom 's
  // IsolationTest established.
     $this->actingAs($userA);

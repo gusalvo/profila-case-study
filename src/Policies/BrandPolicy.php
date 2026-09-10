@@ -8,8 +8,7 @@ use App\Models\Brand;
 use App\Models\User;
 
 /**
- * BrandPolicy — Layer 2 of the 3-layer multi-tenant isolation pattern
- *.
+ * BrandPolicy — Layer 2 of the 3-layer multi-tenant isolation pattern.
  *
  * Layer 1 (Global Scope `owner` on Brand) already hides cross-user brands
  * from queries when a user is logged in. This Policy is defense-in-depth
@@ -21,7 +20,7 @@ use App\Models\User;
  * rule here; change it in one place (the User model) and it propagates.
  *
  * Auto-discovered by Laravel 11 via convention (App\Models\Brand →
- * App\Policies\BrandPolicy); no explicit Gate::policy() call needed.
+ * App\Policies\BrandPolicy); no explicit Gate::policy call needed.
  */
 class BrandPolicy
 {

@@ -11,7 +11,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 /**
  * HashtagCount — custom validation rule for hashtag count per content format.
  *
- * Format-aware matrix (CONTEXT.md)
+ * Format-aware matrix
  * gbp_post → 0 hashtags (Google Business Profile ignores hashtags)
  * story → 0-3 (optional minimal hashtags for Stories)
  * instagram / facebook / post / reel / carousel → 8-15 (spec)

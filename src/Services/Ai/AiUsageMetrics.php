@@ -8,7 +8,7 @@ namespace App\Services\Ai;
  * AiUsageMetrics — immutable per-call usage telemetry.
  *
  * Produced by {@see AnthropicClient::generateBrief} and consumed
- * {@see \App\Services\Ai\AiUsageLogger} (Plan 04) which persists the data into
+ * {@see \App\Services\Ai\AiUsageLogger} which persists the data into
  * `ai_usage_logs` along with the computed cost.
  *
  * Field mapping from the Anthropic /v1/messages response
@@ -17,7 +17,7 @@ namespace App\Services\Ai;
  * usage.cache_read_input_tokens → $cacheReadTokens
  * usage.cache_creation_input_tokens → $cacheWriteTokens
  *
- * `durationMs` is measured client-side around the HTTP::post() call.
+ * `durationMs` is measured client-side around the HTTP::post call.
  */
 final readonly class AiUsageMetrics
 {

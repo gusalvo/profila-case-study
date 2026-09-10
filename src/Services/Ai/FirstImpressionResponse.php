@@ -9,7 +9,7 @@ namespace App\Services\Ai;
  *
  * Mirrors {@see IdeasAiResponse} shape verbatim (DTO pattern).
  * Immutable readonly class (PHP 8.2). Holds the raw text response from the
- * Haiku model + per-call usage metrics. ScanFirstImpressionJob (Plan 05) then
+ * Haiku model + per-call usage metrics. ScanFirstImpressionJob then
  * parses the 5 fields from rawText before storing in Cache.
  *
  * `rawText` is intentionally a string (not a parsed array) — keeping the

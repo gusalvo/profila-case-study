@@ -10,7 +10,7 @@ namespace App\Services\Ai;
  * Holds a DECODED structured payload for the theme-model pipeline.
  * Unlike {@see PlanLogicResponse} (flat text) or {@see PlanItemAiResponse} (raw text
  * for orchestrator to parse), this DTO decodes the AI's JSON at the HTTP boundary
- * into a typed structure ready for Plan 05 rollup to merge against PHP-computed weights.
+ * into a typed structure ready for rollup to merge against PHP-computed weights.
  *
  * CRITICAL: `$themes` carries NO weight/percentage fields. Weights are
  * PHP-computed at rollup. The AI returns ONLY the strategic layer

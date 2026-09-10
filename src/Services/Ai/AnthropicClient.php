@@ -38,13 +38,13 @@ use Throwable;
  * errors → return DTO.
  *
  * extensions
- * generateIdeas() → claude-haiku-4-5 (Pipeline 2,; Sonnet reverted 2026-06-04 — sync timeout)
- * generatePlanItem() → claude-sonnet-4-6 (Pipeline 3)
- * regenerateCaption() → claude-haiku-4-5
- * regenerateVisual() → claude-haiku-4-5
- * regenerateFull() → claude-sonnet-4-6
+ * generateIdeas → claude-haiku-4-5 (Pipeline 2,; Sonnet reverted 2026-06-04 — sync timeout)
+ * generatePlanItem → claude-sonnet-4-6 (Pipeline 3)
+ * regenerateCaption → claude-haiku-4-5
+ * regenerateVisual → claude-haiku-4-5
+ * regenerateFull → claude-sonnet-4-6
  *
- * T-key-leak mitigation
+ * Key-leak mitigation
  * api_key is read via config('services.anthropic.api_key') exclusively.
  * No literal env-variable name appears in this class.
  * On error paths we throw typed exceptions WITHOUT including the request
@@ -59,7 +59,7 @@ use Throwable;
 final class AnthropicClient implements AiClient
 {
     /**
- * Per-request memoization of resolved profiles (WR-04). The provider is
+ * Per-request memoization of resolved profiles. The provider is
  * stateless and the profile JSON is immutable per deploy, so caching
  * category value avoids re-reading/re-parsing disk on every AI call
  * including each of the 20+ per-plan-item generations in a single plan run.
@@ -68,7 +68,7 @@ final class AnthropicClient implements AiClient
      */
     private array $verticalProfileCache = [];
 
- // WR-04: constructor-inject the (stateless) provider so the container
+ // Constructor-inject the (stateless) provider so the container
  // supplies a shared instance and it can be mocked when unit-testing this
  // class, instead of hardcoding `new VerticalProfileProvider`.
     public function __construct(
@@ -77,7 +77,7 @@ final class AnthropicClient implements AiClient
 
     /**
  * Resolve (and memoize per request) the vertical_profile for a brand's
- * category. WR-04: collapses the repeated
+ * Category. collapses the repeated
  * `$this->verticalProfileProvider->forCategory($brand->category)` calls
  * scattered across every pipeline into a single memoized lookup.
  *
@@ -100,11 +100,11 @@ final class AnthropicClient implements AiClient
         ?array $personaPayload = null,
     ): BriefAiResponse {
  // B3: pure pass-through. No persona-resolution code here. The caller
- // (BriefGenerator in Plan 04) owns persona resolution.
+ // (BriefGenerator in) owns persona resolution.
         $verticalProfile = $this->verticalProfileFor($brand);
         $systemBlock = PromptTemplates::brief($brand, $personaPayload, $verticalProfile);
 
- // Plan 04a closed the placeholder: real source serialization now
+ // closed the placeholder: real source serialization now
  // place via the deterministic \App\Services\Brief\SourcesSerializer::class
  // (///). The class is fully stateless; the static
  // call avoids a needless container resolve.
@@ -117,9 +117,9 @@ final class AnthropicClient implements AiClient
             'goal' => $goal,
         ])->render();
 
- // WR-03: delegate to the shared post() helper instead of re-implementing
+ // Delegate to the shared post helper instead of re-implementing
  // the headers / timeout / error-status cascade / usage extraction inline.
- // post() reads the model from the passed body, so the brief model
+ // post reads the model from the passed body, so the brief model
  // (config('services.anthropic.model')) is supplied here.
         $body = [
             'model' => config('services.anthropic.model'),
@@ -364,9 +364,9 @@ final class AnthropicClient implements AiClient
         $verticalProfile = $this->verticalProfileFor($brand);
         $systemPrompt = PromptTemplates::firstImpression($brand, $verticalProfile);
 
- // T-7.2 / WR-05: untrusted scraped/social content is XML-delimited in the
+ // Prompt-injection guard: untrusted scraped/social content is XML-delimited in the
  // user message via the dedicated user-only partial. The cached system
- // prefix (schema + role) is built once by PromptTemplates::firstImpression()
+ // prefix (schema + role) is built once by PromptTemplates::firstImpression
  // above — the user message no longer re-renders it, removing the
  // double-render and its cache-drift risk.
         $userMessage = view('prompts.first_impression_user', [
@@ -473,9 +473,9 @@ final class AnthropicClient implements AiClient
     /**
  * Build the per-run user message for the similar-activities synthesis.
  *
- * Serializes the deterministic presence map (TerritoryPresenceMapper::map() output)
+ * Serializes the deterministic presence map (TerritoryPresenceMapper::map output)
  * and confirmed-site summaries (title/meta only — GR anti-contamination
- *never pass raw competitor body text to the AI).
+ * never pass raw competitor body text to the AI).
  *
  * @param list<array{name: string, level: string, reason: string}> $presenceMap
  * @param list<array{url: string, title: string, meta: string}> $confirmedSites

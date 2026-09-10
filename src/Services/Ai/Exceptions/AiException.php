@@ -13,9 +13,9 @@ use Exception;
  * verbatim message (of).
  *
  * Consumed
- * AnthropicClient (Plan 03 — throws typed children)
- * BriefGenerator (Plan 04 — catches typed children, logs via AiUsageLogger)
- * Brief\Show Livewire component (Plan 05 — maps to IT messages)
+ * AnthropicClient
+ * BriefGenerator
+ * Brief\Show Livewire component
  */
 class AiException extends Exception
 {

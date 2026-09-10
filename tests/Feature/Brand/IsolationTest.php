@@ -24,7 +24,7 @@ use Livewire\Livewire;
 | Layer 1 (Global Scope `owner` on Brand) hides foreign rows from queries.
 | Layer 2 (BrandPolicy) is defense-in-depth: even bypassing Layer 1, the
 | ownership check denies.
-| Layer 3 (auth()->user()->brands()->... access in Livewire components)
+| Layer 3 (auth()->user()->brands()->.. access in Livewire components)
 | ensures every controller boundary uses the user-scoped relation.
 |
 | Assertion convention
@@ -32,13 +32,13 @@ use Livewire\Livewire;
 | The Global Scope hides existence, not just access. A foreign brand looks
 | like a non-existent brand — no information leak.
 |
-| We use HTTP-level requests ($this->get(route(...))) for cross-tenant view
+| We use HTTP-level requests ($this->get(route(..))) for cross-tenant view
 | so Laravel's exception handler converts ModelNotFoundException → 404
 | response (Livewire::test propagates the exception instead of converting it).
 |
 | Setup convention
-| ALWAYS call auth()->logout() before Brand::factory()->for($otherUser)->create().
-| The Global Scope filters by auth()->id() at factory time too; if you're
+| ALWAYS call auth()->logout before Brand::factory()->for($otherUser)->create.
+| The Global Scope filters by auth()->id at factory time too; if you're
 | currently acting as user A and try to create a brand for user B without
 | logging out, the row is still created but Layer 1 will make subsequent
 | queries inconsistent during setup. Logout → factory → re-login is safe.
@@ -99,7 +99,7 @@ it('user A cannot archive user B brand via URL or Livewire (404 at mount)', func
 
  // HTTP-level GET on the brand show URL — the archive action is only
  // reachable from inside the Show component; if Show.mount fails (404)
- // archive() can never run. We verify the gating at the route boundary.
+ // archive can never run. We verify the gating at the route boundary.
     $this->actingAs($userA)
         ->get(route('brands.show', ['slug' => $brandB->slug]))
         ->assertNotFound();
@@ -116,8 +116,8 @@ it('user A cannot restore user B archived brand', function () {
     $brandB = Brand::factory()->for($userB)->create();
     $brandB->delete(); // soft-delete
 
- // Archived.restore($slug) uses auth()->user()->brands()->onlyTrashed()
- // >where('slug', ...)->firstOrFail(). user A's relation has no trashed
+ // Archived.restore($slug) uses auth()->user()->brands()->onlyTrashed
+ // >where('slug',..)->firstOrFail. user A's relation has no trashed
  // brand matching this slug → ModelNotFoundException.
  //
  // Livewire::test propagates the exception to the test (instead of going
@@ -145,14 +145,14 @@ it('Brand factory pattern is auth()->logout() before factory-for-other-user (reg
 
  // regression guard
  // While user A is acting, factory-creating a Brand FOR user B should
- // still work because Brand::booted() only filters READS when
- // auth()->check() is true — INSERTS go through the relation `->for($userB)`
+ // still work because Brand::booted only filters READS when
+ // auth()->check is true — INSERTS go through the relation `->for($userB)`
  // which writes user_id=$userB->id. The Global Scope DOES NOT mutate
  // INSERTs; it only filters SELECTs.
  //
  // However, querying RIGHT AFTER while still acting as user A will hide
  // the row from default queries — which is the whole point of Layer 1.
- // The correct pattern for cross-tenant fixtures is auth()->logout()
+ // The correct pattern for cross-tenant fixtures is auth()->logout
  // BEFORE the factory, then re-actingAs in the assertion phase.
     $this->actingAs($userA);
     auth()->logout(); // <-- mandatory regression guard

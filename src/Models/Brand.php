@@ -25,15 +25,14 @@ use Spatie\Sluggable\SlugOptions;
  * (relation-only access in Livewire) ships in.
  *
  * `user_id` is intentionally absent from `$fillable` to block mass assignment
- * (threat T-1-04-MA). The owning user is set via the relation
- * `auth()->user()->brands()->create([...])`
+ * . The owning user is set via the relation
+ * `auth()->user()->brands()->create([..])`
  * or via `Brand::factory()->for($user)->create()` in tests.
  *
  * Slug is auto-generated from `name` (via spatie/laravel-sluggable), immutable
  * on update, and unique per-user (composite DB constraint + extraScope filter).
  *
  * Route key is `slug` — URLs never expose the auto-increment id
- * (threat T-1-04-RK).
  */
 class Brand extends Model
 {
@@ -42,7 +41,7 @@ class Brand extends Model
     /**
  * Mass-assignable fields. NOTE: `user_id` and `slug` are NOT included.
  *
- * `language_locked` is included so BrandForm::update() can persist the
+ * `language_locked` is included so BrandForm::update can persist the
  * explicit-user-choice signal (/).
  *
  * @var list<string>
@@ -136,7 +135,7 @@ class Brand extends Model
     /**
  * Slug options — auto from `name`, immutable, per-user-unique.
  *
- *without `extraScope`, slugs would be globally
+ * Without `extraScope`, slugs would be globally
  * unique and two users with the same brand name would conflict.
      */
     public function getSlugOptions(): SlugOptions
@@ -171,8 +170,7 @@ class Brand extends Model
  * Knowledge-base sources owned by this brand.
  *
  * BrandSource has no Global Scope of its own — Layer 1 isolation is
- * inherited transitively through this relation (
- * Note"). Always look up sources via `$brand->sources()`, never
+ * inherited transitively through this relation (. Always look up sources via `$brand->sources()`, never
  * `BrandSource::find()` from Livewire components.
  *
  * @return HasMany<BrandSource>

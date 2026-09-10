@@ -5,8 +5,7 @@ namespace App\Enums;
 /**
  * User subscription tier.
  *
- * Stored as VARCHAR(30) on `users.plan_tier` (NEVER `$table->enum()`
- *).
+ * Stored as VARCHAR(30) on `users.plan_tier` (NEVER `$table->enum()`).
  *
  * The free tier is capped at 1 brand and 1 active plan per month (`User::canCreateBrand()`
  * `User::canCreatePlanThisMonth()`). The pro tier is capped at 3 brands and 4 plans

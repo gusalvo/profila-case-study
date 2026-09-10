@@ -13,7 +13,7 @@ use App\Services\Discovery\DTOs\BraveResult;
  * Implementations: RealBraveSearchClient (Http + Brave API)
  * DemoBraveSearchClient (per-vertical fixtures, no HTTP call).
  *
- * Binding in AppServiceProvider::boot() mirrors the AiClient → DemoAiClient
+ * Binding in AppServiceProvider::boot mirrors the AiClient → DemoAiClient
  * swap under config('ai.mode') === 'demo'.
  */
 interface BraveSearchClient

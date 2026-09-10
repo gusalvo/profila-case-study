@@ -10,11 +10,9 @@ use App\Models\User;
 
 /**
  * BrandSourcePolicy — Layer 2 of the 3-layer multi-tenant isolation pattern
- * applied to BrandSource (
- *).
+ * applied to BrandSource.
  *
- * Layer 1 is INHERITED transitively via the parent Brand's Global Scope
- * (BrandSource Layer 1 inheritance").
+ * Layer 1 is INHERITED transitively via the parent Brand's Global Scope.
  * BrandSource has no own Global Scope. This Policy is defense-in-depth
  * even if a query reaches a source whose brand belongs to another user, the
  * explicit `$source->brand->user_id === $user->id` check blocks the action.
@@ -25,7 +23,7 @@ use App\Models\User;
  * `$user->can('create', [BrandSource::class, $brand])`.
  *
  * Auto-discovered by Laravel 11 via convention (App\Models\BrandSource →
- * App\Policies\BrandSourcePolicy); no explicit Gate::policy() call needed.
+ * App\Policies\BrandSourcePolicy); no explicit Gate::policy call needed.
  */
 class BrandSourcePolicy
 {

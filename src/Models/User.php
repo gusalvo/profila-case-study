@@ -32,7 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'plan_tier',
  // Onboarding state columns.
- // Added to $fillable to allow internal service update() calls.
+ // Added to $fillable to allow internal service update calls.
  // These are NEVER exposed to HTTP mass-assignment (no routes accept them).
         'onboarding_started_at',
         'onboarding_completed_at',
@@ -57,7 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
  * Get the attributes that should be cast.
  *
- * WR-01: Onboarding timestamp columns explicitly cast to 'datetime' (Carbon) even
+ * Onboarding timestamp columns explicitly cast to 'datetime' (Carbon) even
  * though Laravel 11 auto-casts *_at columns — explicit declarations are safer against
  * future framework changes and make intent clear in code review.
  *
@@ -76,13 +76,13 @@ class User extends Authenticatable implements MustVerifyEmail
  //is_admin cast to boolean. NOT in $fillable (mass-assignment guard).
             'is_admin'                => 'boolean',
  //per-user PDF footer opt-in toggle. Cast to boolean; in $fillable
- // so profile/admin toggle update() calls can set it. Default false (footer shown).
+ // so profile/admin toggle update calls can set it. Default false (footer shown).
             'pdf_footer_removed'      => 'boolean',
         ];
     }
 
     /**
- *Admin identification helper.
+ * Admin identification helper.
  *
  * Returns true iff this user is a system administrator.
  * Convenience wrapper over the `is_admin` boolean column.
@@ -97,12 +97,12 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
  * /: Cascade soft-delete and restore to owned brands.
  *
- * Registered in booted() so admin-triggered user delete/restore
+ * Registered in booted so admin-triggered user delete/restore
  * propagates to all of the user's brands.
  *
  * CRITICAL: MUST use withoutGlobalScope('owner') (singular, named)
- * never withoutGlobalScopes() plural (strips SoftDeletingScope) and
- * never $user->brands() (filtered by auth()->id() = admin, not target user).
+ * never withoutGlobalScopes plural (strips SoftDeletingScope) and
+ * never $user->brands (filtered by auth()->id = admin, not target user).
  *
  * documents this gated bypass.
      */
@@ -123,7 +123,7 @@ class User extends Authenticatable implements MustVerifyEmail
  // Cascade restore to brands deleted in the same cascade window.
  //brands deleted BEFORE the user cascade have a different deleted_at
  // timestamp — they must NOT be restored (pre-existing deletions stay trashed).
- // WR-01: match a bounded ±1s window rather than exact deleted_at equality
+ // Match a bounded ±1s window rather than exact deleted_at equality
  // MySQL truncates fractional seconds while Carbon keeps microseconds, so the
  // brand and user deleted_at can differ by sub-second amounts in the same cascade.
  // A pre-existing deletion (seconds+ earlier) still falls outside the window.
@@ -148,7 +148,7 @@ class User extends Authenticatable implements MustVerifyEmail
  *
  * Stub relation — the App\Models\Brand model is created in.
  * PHP resolves the class reference lazily, so declaring it here ahead
- * time is safe and unlocks the canCreateBrand() free-tier guard.
+ * time is safe and unlocks the canCreateBrand free-tier guard.
  *
  * @return HasMany<\App\Models\Brand>
      */
@@ -181,7 +181,7 @@ class User extends Authenticatable implements MustVerifyEmail
  * Pro tier: fewer than 3 brands (finite cap — replaces the old "always true").
  * Free tier: fewer than 1 brand (unchanged).
  *
- * NEVER duplicate this logic. BrandPolicy::create() and the
+ * NEVER duplicate this logic. BrandPolicy::create and the
  * Livewire UI must call this method — +.
  * Policies/Livewire/Blade MUST delegate.
      */
@@ -211,7 +211,7 @@ class User extends Authenticatable implements MustVerifyEmail
  * sources do NOT count toward the cap (parity with canCreateBrand
  * SUMMARY handoff invariant).
  *
- * NEVER duplicate this logic. BrandSourcePolicy::create()
+ * NEVER duplicate this logic. BrandSourcePolicy::create
  * and the Livewire UI MUST delegate to this method
  *
      */
@@ -238,7 +238,7 @@ class User extends Authenticatable implements MustVerifyEmail
  *
  * Month boundaries use now('Europe/Rome') (never Carbon::now()).
  *
- * NEVER duplicate this logic. EditorialPlanPolicy::create()
+ * NEVER duplicate this logic. EditorialPlanPolicy::create
  * MUST delegate to this method — single source of truth.
  * Policies/Livewire/Blade MUST delegate.
  *
@@ -373,7 +373,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
- *First-time onboarding gate.
+ * First-time onboarding gate.
  *
  * Returns true iff the user has NOT yet linked a first brand (wizard not
  * completed or dismissed) AND has NOT explicitly dismissed the onboarding
@@ -399,7 +399,7 @@ class User extends Authenticatable implements MustVerifyEmail
  * 1. services_count >= 2
  * 2. (tone_rule_count + word_use_count) >= 1
  *
- * / (Plan 04): the "avoid" condition
+ * /: the "avoid" condition
  * (word_avoid + tone_rule[avoid] >= 1) has been DROPPED. The scrape-first path
  * often yields services + tone but no avoid sources; blocking at Brief generation
  * on missing avoid prevents valid onboarding flows. words_to_avoid remains a
@@ -452,7 +452,7 @@ class User extends Authenticatable implements MustVerifyEmail
  * All editorial plans owned by this user (through their brands).
  *
  * Convenience relation for admin queries / analytics. Livewire components
- * MUST still use `auth()->user()->brands()->...->plans()` relation chain
+ * MUST still use `auth()->user()->brands()->..->plans()` relation chain
  * for Layer 3 isolation.
  *
  * @return HasManyThrough<\App\Models\EditorialPlan>

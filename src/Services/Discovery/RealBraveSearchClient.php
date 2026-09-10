@@ -17,12 +17,12 @@ use Throwable;
  * returns an empty list and emits a Log::warning. This guarantees the discovery
  * pipeline is non-blocking regardless of Brave API availability.
  *
- * NOT final — test doubles and Http::fake() must be able to intercept.
+ * NOT final — test doubles and Http::fake must be able to intercept.
  * (Mockery 1.6.x cannot mock final classes; keep non-final to
  * match WebsiteScraper's posture.)
  *
- * Key is read ONLY via config('services.brave.api_key') — NEVER direct env().
- *the key is NEVER logged (Log::warning logs status/message only).
+ * Key is read ONLY via config('services.brave.api_key') — NEVER direct env.
+ * The key is NEVER logged (Log::warning logs status/message only).
  */
 class RealBraveSearchClient implements BraveSearchClient
 {

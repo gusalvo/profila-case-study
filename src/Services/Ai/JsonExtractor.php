@@ -10,17 +10,15 @@ use JsonException;
 
 /**
  * JsonExtractor — strip markdown fence + prose-prefix + parse to array
- * (verbatim from).
  *
  * Why static: this is a pure transformation. No DI needed; no state.
  *
  * The extractor is conservative — it strips the wrappers but does NOT
  * "repair" malformed JSON. If `json_decode` fails after stripping, the
- * caller (BriefGenerator in Plan 04) decides whether to retry.
+ * caller (BriefGenerator in) decides whether to retry.
  *
- * T-key-leak (Plan 03 threat model): logs ONLY the raw RESPONSE text
- * truncated to 2000 chars via `mb_substr(..., 'UTF-8')` (
- * multibyte mandate). It NEVER logs the request body, the system prompt
+ * Key-leak guard: logs ONLY the raw RESPONSE text
+ * truncated to 2000 chars via `mb_substr(.., 'UTF-8')` (multibyte mandate). It NEVER logs the request body, the system prompt
  * or the API key — those are not in scope here anyway.
  */
 final class JsonExtractor
@@ -38,7 +36,7 @@ final class JsonExtractor
     {
         $text = trim($raw);
 
- // Strip markdown fence: ```json ... ``` or ``` ... ``` (anchored
+ // Strip markdown fence: ```json.. ``` or ```.. ``` (anchored
  // multiline, so a fence in the middle is left alone).
         $text = preg_replace('/^```(?:json)?\s*/m', '', $text) ?? $text;
         $text = preg_replace('/\s*```$/m', '', $text) ?? $text;

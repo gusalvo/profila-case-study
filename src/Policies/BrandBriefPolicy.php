@@ -20,19 +20,16 @@ use App\Models\User;
  * `create` and `regenerate` take a `(User, Brand)` signature (Gate accepts
  * arrays for the model arg: `$user->can('create', [BrandBrief::class, $brand])`).
  *
- * `confirm` is a custom ability — only callable on DRAFT briefs (
- * only-confirm-once invariant). Re-confirming an already-confirmed brief is
+ * `confirm` is a custom ability — only callable on DRAFT briefs (only-confirm-once invariant). Re-confirming an already-confirmed brief is
  * denied at the Policy boundary, not relied on UI absence.
  *
  * NO `update` method: editing fields + clicking "Conferma" is a single
- * Livewire action `confirm`, not a separate PATCH endpoint (
- * anti-promise — no REST API).
+ * Livewire action `confirm`, not a separate PATCH endpoint (anti-promise — no REST API).
  *
  * NO `delete` method: briefs are never deleted — version trail is the audit
- * (KB).
  *
  * Auto-discovered by Laravel 11 (App\Models\BrandBrief → App\Policies\
- * BrandBriefPolicy); no explicit Gate::policy() registration needed.
+ * BrandBriefPolicy); no explicit Gate::policy registration needed.
  */
 class BrandBriefPolicy
 {

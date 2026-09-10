@@ -10,7 +10,7 @@ namespace App\Services\Ai\Exceptions;
  * to the AI-failure family — the BriefGenerator catch-all handles it together
  * with the typed siblings (AiInvalidJsonException, AiSchemaInvalidException).
  *
- * Plan 03 (Anthropic client + JsonExtractor) is the producer. Logged
+ * (Anthropic client + JsonExtractor) is the producer. Logged
  * AiUsageLogger with status = AiUsageStatus::ErrorJson.
  */
 class InvalidAiResponseException extends AiException

@@ -23,7 +23,7 @@ use Throwable;
  *
  * Test double for the 4 AI HTTP boundary. Used by BriefGenerator and
  * IdeaGenerator / PlanItemGenerator tests bound
- * `app()->bind(AiClient::class, fn () => $fake)`.
+ * `app()->bind(AiClient::class, fn => $fake)`.
  *
  * B3 verification hook: all inputs are captured BEFORE the throw/return so a
  * test can assert the contract holds even when the fake throws (e.g., when

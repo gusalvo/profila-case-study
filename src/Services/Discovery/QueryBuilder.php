@@ -25,7 +25,7 @@ final class QueryBuilder
  * Build ≤2 query strings from the vertical profile templates.
  *
  * @param Brand $brand Brand model (must have `category` cast + optional `brief` relation).
- * @param array<string, mixed> $profile Result of VerticalProfileProvider::forCategory().
+ * @param array<string, mixed> $profile Result of VerticalProfileProvider::forCategory.
  * @return list<string>
      */
     public function build(Brand $brand, array $profile): array

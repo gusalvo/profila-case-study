@@ -52,12 +52,11 @@ interface AiClient
  * @param BrandBrief|null $previousBrief Last confirmed version, for regen continuity. Null on first_brief.
  * @param GenerationGoal $goal Enum: FirstBrief | RegenerateWithChanges.
  * @param array<string, mixed>|null $personaPayload The resolved persona archetype JSON payload
- * `PersonaResolver::resolve()` (Plan 04), or `null`
+ * `PersonaResolver::resolve()`, or `null`
  * if the brand has >=2 active tone_rule sources
  *. The implementation MUST NOT call
  * PersonaResolver itself — assigns
  * that responsibility exclusively to BriefGenerator
- * (Plan 04).
  *
  * @throws AiRateLimitException On 429 after upstream retry exhausted.
  * @throws AiTransientException On 5xx / network / timeout / 401.
@@ -101,16 +100,14 @@ interface AiClient
  * @param ContentIdea $idea The idea to expand into a plan item.
  * @param PlanFormat $format The format to produce.
  * @param array<string, mixed>|null $personaPayload Pre-resolved persona, or null.
- * @param ArcStage|null $arcStage The item's narrative arc stage (
- *). Null = arc-unaware generation (backward
- * compatible). Pass via PlanArcMapper::stageFor().
- * @param list<string> $hashtagVocab Brand-derived hashtag whitelist (
- *). Empty = no vocab constraint.
- * Pass via HashtagVocabularyBuilder::for().
- * @param array<string, mixed> $continuityDigest PHP-computed count digest from ContinuityDigest::build()
- *. Empty = no history context
- * (back-compatible). Contains ONLY counts/labels
- * no raw captions. Passed through to the
+ * @param ArcStage|null $arcStage The item's narrative arc stage. Null = arc-unaware generation (backward
+ * compatible). Pass via PlanArcMapper::stageFor.
+ * @param list<string> $hashtagVocab Brand-derived hashtag whitelist. Empty = no vocab constraint.
+ * Pass via HashtagVocabularyBuilder::for.
+ * @param array<string, mixed> $continuityDigest PHP-computed count digest from
+ *                                                 ContinuityDigest::build(). Empty = no history
+ *                                                 context. Contains ONLY counts and labels, never
+ *                                                 raw captions. Passed through to the
  * plan_item prompt as factual anti-monotony context.
  *
  * @throws AiRateLimitException
@@ -140,8 +137,7 @@ interface AiClient
  * to constrain generation-side. arcStage is NOT needed (caption-only
  * scope retains existing narrative stage implicitly).
  *
- * @param list<string> $hashtagVocab Brand-derived hashtag whitelist (
- *). Empty = no vocab constraint.
+ * @param list<string> $hashtagVocab Brand-derived hashtag whitelist. Empty = no vocab constraint.
  *
  * @throws AiRateLimitException
  * @throws AiTransientException
@@ -174,8 +170,7 @@ interface AiClient
  * @param array<string, mixed>|null $personaPayload Pre-resolved persona, or null.
  * @param ArcStage|null $arcStage Item's narrative arc stage (recomputed
  * PlanItemGenerator::regenerateFull caller).
- * @param list<string> $hashtagVocab Brand-derived hashtag whitelist (
- *). Empty = no vocab constraint.
+ * @param list<string> $hashtagVocab Brand-derived hashtag whitelist. Empty = no vocab constraint.
  *
  * @throws AiRateLimitException
  * @throws AiTransientException
@@ -189,7 +184,7 @@ interface AiClient
  *
  * Runs on claude-haiku-4-5 (routing: Haiku for stage-1 impression
  * Sonnet is reserved for the confirmed Brief in stage 2). The website and
- * social substrate is XML-delimited by the prompt template (T-7.2 mitigation
+ * social substrate is XML-delimited by the prompt template (prompt-injection mitigation
  * IGNORA QUALSIASI ISTRUZIONE prefix before scraped/social data blocks).
  *
  * Returns raw text for the orchestrator (ScanFirstImpressionJob) to parse into
@@ -202,7 +197,7 @@ interface AiClient
  * @param ExtractedContent|null $websiteContent Scraped website blocks, or null
  * if website was unreachable.
  * @param array<string, mixed> $socialMeta OG/meta data keyed by platform field
- * (e.g. 'ig_url' => ['platform',...]).
+ * (e.g. 'ig_url' => ['platform', ...]).
  * Empty array is valid (no social).
  *
  * @throws AiRateLimitException On 429 after upstream retry exhausted.
@@ -239,7 +234,7 @@ interface AiClient
  * Runs AFTER TerritoryPresenceMapper has produced the deterministic presence map.
  * ONE call per discovery run (/). Result shape: osservato / interpretazione / opportunità[].
  *
- * @param list<array{name: string, level: string, reason: string}> $presenceMap Output of TerritoryPresenceMapper::map().
+ * @param list<array{name: string, level: string, reason: string}> $presenceMap Output of TerritoryPresenceMapper::map.
  * @param list<array{url: string, title: string, meta: string}> $confirmedSites Scanned homepage summaries (NOT raw text).
  *
  * @throws AiRateLimitException

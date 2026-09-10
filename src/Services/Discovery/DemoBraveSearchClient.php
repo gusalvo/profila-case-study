@@ -11,11 +11,11 @@ use App\Services\Discovery\DTOs\BusinessCandidate;
 /**
  * DemoBraveSearchClient — HTTP-free Brave client for AI_MODE=demo (DISC-01).
  *
- * Returns an empty list from search() — zero HTTP calls, zero side-effects.
- * Per-vertical BusinessCandidate fixtures are dispatched via candidatesFor()
+ * Returns an empty list from search — zero HTTP calls, zero side-effects.
+ * Per-vertical BusinessCandidate fixtures are dispatched via candidatesFor
  * called directly by SimilarBusinessFinder when it detects demo mode.
  *
- * Bound to BraveSearchClient::class in AppServiceProvider::boot() when
+ * Bound to BraveSearchClient::class in AppServiceProvider::boot when
  * config('ai.mode') === 'demo', mirroring the AiClient → DemoAiClient swap.
  */
 final class DemoBraveSearchClient implements BraveSearchClient
@@ -35,7 +35,7 @@ final class DemoBraveSearchClient implements BraveSearchClient
     /**
  * Return per-vertical BusinessCandidate fixtures for demo mode.
  *
- * Called by SimilarBusinessFinder::find() when demo mode is active.
+ * Called by SimilarBusinessFinder::find when demo mode is active.
  * Uses realistic Italian business names / URLs / reasons per category.
  *
  * @return list<BusinessCandidate>

@@ -15,12 +15,12 @@ namespace App\Services\Ai;
  *
  * Construction pattern (mitigation): the orchestrator builds
  * one record per code path (success / error_*) and passes it to
- * AiUsageLogger->log() BEFORE the exception bubble or return. The Logger
+ * AiUsageLogger->log BEFORE the exception bubble or return. The Logger
  * then writes a row with cost_usd computed live via AiCostCalculator — never
  * recomputed later.
  *
  * Factory methods on AiUsageLogger build the correct record
- * per pipeline: forIdeas(), forPlanItem(), forRegen().
+ * per pipeline: forIdeas, forPlanItem, forRegen.
  *
  * BACKWARD COMPAT NOTE: `editorialPlanId` and `isRegen` are placed at the END
  * with default values to remain backward-compatible with callers
@@ -28,7 +28,7 @@ namespace App\Services\Ai;
  * They default to null/false respectively for the brief pipeline.
  *
  * providerRequestId would go here in v1.1 for support correlation; deferred
- * per (W1 accepted).
+ * to a later release.
  */
 final readonly class AiUsageRecord
 {

@@ -8,7 +8,7 @@ namespace App\Services\Ai;
  * BriefAiResponse — DTO returned by {@see AiClient::generateBrief}.
  *
  * Immutable readonly class (PHP 8.2). Holds the raw text response from the
- * model + per-call usage metrics. The Plan 04 BriefGenerator orchestrator
+ * model + per-call usage metrics. The BriefGenerator orchestrator
  * then runs the raw text through {@see JsonExtractor} + a schema validator
  * before persisting.
  *
