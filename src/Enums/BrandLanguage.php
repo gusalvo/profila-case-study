@@ -31,7 +31,7 @@ enum BrandLanguage: string
     }
 
     /**
- * Dropdown options helper: ['it' => 'Italiano',..].
+ * Dropdown options helper: ['it' => 'Italiano',...].
  *
  * @return array<string, string>
      */

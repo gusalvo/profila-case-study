@@ -76,7 +76,7 @@ enum BrandCategory: string
     }
 
     /**
- * Dropdown options helper: ['struttura_ricettiva' => 'Struttura ricettiva',..].
+ * Dropdown options helper: ['struttura_ricettiva' => 'Struttura ricettiva',...].
  *
  * Declaration order drives dropdown order — no extra sorting needed.
  *

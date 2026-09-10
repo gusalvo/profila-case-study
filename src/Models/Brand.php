@@ -26,7 +26,7 @@ use Spatie\Sluggable\SlugOptions;
  *
  * `user_id` is intentionally absent from `$fillable` to block mass assignment
  * . The owning user is set via the relation
- * `auth()->user()->brands()->create([..])`
+ * `auth()->user()->brands()->create([...])`
  * or via `Brand::factory()->for($user)->create()` in tests.
  *
  * Slug is auto-generated from `name` (via spatie/laravel-sluggable), immutable

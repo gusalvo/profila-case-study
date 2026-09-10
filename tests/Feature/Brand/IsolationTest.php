@@ -117,7 +117,7 @@ it('user A cannot restore user B archived brand', function () {
     $brandB->delete(); // soft-delete
 
  // Archived.restore($slug) uses auth()->user()->brands()->onlyTrashed
- // >where('slug',..)->firstOrFail. user A's relation has no trashed
+ // >where('slug',...)->firstOrFail. user A's relation has no trashed
  // brand matching this slug → ModelNotFoundException.
  //
  // Livewire::test propagates the exception to the test (instead of going

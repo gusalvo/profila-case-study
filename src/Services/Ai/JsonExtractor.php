@@ -18,7 +18,7 @@ use JsonException;
  * caller (BriefGenerator in) decides whether to retry.
  *
  * Key-leak guard: logs ONLY the raw RESPONSE text
- * truncated to 2000 chars via `mb_substr(.., 'UTF-8')` (multibyte mandate). It NEVER logs the request body, the system prompt
+ * truncated to 2000 chars via `mb_substr(..., 'UTF-8')` (multibyte mandate). It NEVER logs the request body, the system prompt
  * or the API key — those are not in scope here anyway.
  */
 final class JsonExtractor
@@ -36,7 +36,7 @@ final class JsonExtractor
     {
         $text = trim($raw);
 
- // Strip markdown fence: ```json.. ``` or ```.. ``` (anchored
+ // Strip markdown fence: ```json... ``` or ```... ``` (anchored
  // multiline, so a fence in the middle is left alone).
         $text = preg_replace('/^```(?:json)?\s*/m', '', $text) ?? $text;
         $text = preg_replace('/\s*```$/m', '', $text) ?? $text;

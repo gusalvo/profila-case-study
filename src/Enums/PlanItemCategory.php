@@ -100,7 +100,7 @@ enum PlanItemCategory: string
     }
 
     /**
- * Opzioni per dropdown: ['servizi' => 'Servizi',..].
+ * Opzioni per dropdown: ['servizi' => 'Servizi',...].
  *
  * @return array<string, string>
      */

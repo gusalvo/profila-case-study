@@ -452,7 +452,7 @@ class User extends Authenticatable implements MustVerifyEmail
  * All editorial plans owned by this user (through their brands).
  *
  * Convenience relation for admin queries / analytics. Livewire components
- * MUST still use `auth()->user()->brands()->..->plans()` relation chain
+ * MUST still use `auth()->user()->brands()->...->plans()` relation chain
  * for Layer 3 isolation.
  *
  * @return HasManyThrough<\App\Models\EditorialPlan>
