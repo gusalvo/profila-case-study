@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Services\Discovery\DTOs;
 
 /**
- * BusinessCandidate — a similar-business result surfaced to the user for confirmation (DISC-05).
+ * BusinessCandidate — a similar-business result surfaced to the user for confirmation.
  *
  * Produced by SimilarBusinessFinder after BlocklistFilter + ConfidenceScorer have
  * processed the raw BraveResult list. Contains no logic — pure value object.
  *
- * Confidence labels map to Italian UI strings per DISC-05
+ * Confidence labels map to Italian UI strings
  * 'alta' → "Pertinenza alta"
  * 'media' → "Da verificare"
  * 'bassa' → "Incerto"

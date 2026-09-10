@@ -8,9 +8,9 @@ use App\Models\Brand;
 use App\Services\Discovery\DTOs\BraveResult;
 
 /**
- * BlocklistFilter — removes blocked/own-domain/listicle results from Brave results (DISC-03, DISC-04).
+ * BlocklistFilter — removes blocked/own-domain/listicle results from Brave results.
  *
- * Execution order is LOAD-BEARING (/ DISC-04)
+ * Execution order is LOAD-BEARING
  * 1. Domain blocklist check (config('discovery.blocklist_domains'))
  * 2. Brand own-domain exclusion (Brand.website host vs BraveResult.normalizedHost)
  * 3. Listicle-title rejection (config('discovery.listicle_patterns'))
@@ -130,7 +130,7 @@ final class BlocklistFilter
     /**
      * Check whether a result title matches any listicle regex pattern.
      *
-     * Listicle check MUST run before scoring (/ DISC-04).
+ * Listicle check MUST run before scoring.
      *
      * @param list<string> $listiclePatterns preg_match-compatible patterns
      */

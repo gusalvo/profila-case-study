@@ -7,17 +7,17 @@ namespace App\Services\Discovery;
 use App\Models\Brand;
 
 /**
- * QueryBuilder — builds Brave search query strings from vertical profile templates (DISC-02).
+ * QueryBuilder — builds Brave search query strings from vertical profile templates.
  *
  * Reads `discovery_query_templates` from the vertical profile array, applies token
- * substitution, and enforces the ≤2 query hard cap (DISC-02 spec).
+ * Substitution, and enforces the ≤2 query hard cap.
  *
  * Tokens substituted
  * {città} → $brand->city (city preserved as-is, with accents)
  * {categoria} → mb_strtolower($brand->category->label())
  * {servizio} → first entry in $brand->brief->services (if loaded); otherwise token → ''
  *
- * If $brand->city is empty/null/whitespace-only → returns [] (DISC-02: non-blocking).
+ * If $brand->city is empty/null/whitespace-only → returns [] (non-blocking).
  */
 final class QueryBuilder
 {
@@ -30,7 +30,7 @@ final class QueryBuilder
      */
     public function build(Brand $brand, array $profile): array
     {
-        // DISC-02 city-empty guard: city missing → zero queries, non-blocking
+ // City-empty guard: city missing → zero queries, non-blocking
         if (trim($brand->city ?? '') === '') {
             return [];
         }
@@ -42,7 +42,7 @@ final class QueryBuilder
             return [];
         }
 
-        // Hard cap: ≤2 queries (DISC-02)
+ // Hard cap: ≤2 queries
         $templates = array_slice($templates, 0, 2);
 
         $city          = $brand->city;

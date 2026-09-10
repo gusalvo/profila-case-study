@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Services\Discovery\DTOs;
 
 /**
- * ExtractedHomepage — the CONF-05 observable-field-only result
+ * ExtractedHomepage — the observable-field-only result
  * CompetitorLightScraper::scan.
  *
- * Contains exactly the CONF-05 whitelist fields from CompetitorMetaExtractor.
+ * Contains exactly the whitelist fields from CompetitorMetaExtractor.
  * NEVER contains: image URLs, any image field, social metrics, reviews, ratings.
  * The toArray result is stored as metadata.observed_facts on the BrandSource.
  *
- * CONF-05 / GR.
+ * / GR.
  */
 final readonly class ExtractedHomepage
 {
     /**
-     * @param array<string, mixed> $fields CONF-05 whitelist fields only
+ * @param array<string, mixed> $fields whitelist fields only
      */
     public function __construct(
         public array $fields,

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
- * RealBraveSearchClient — Http-backed Brave Search API client (DISC-01).
+ * RealBraveSearchClient — Http-backed Brave Search API client.
  *
  * NEVER throws — every failure path (missing key / HTTP non-200 / transport error)
  * returns an empty list and emits a Log::warning. This guarantees the discovery
@@ -33,7 +33,7 @@ class RealBraveSearchClient implements BraveSearchClient
     /**
      * Execute a Brave web search query and return normalized BraveResult DTOs.
      *
-     * NEVER throws — returns empty array on any failure (DISC-01).
+ * NEVER throws — returns empty array on any failure.
      *
      * @return list<BraveResult>
      */
@@ -43,7 +43,7 @@ class RealBraveSearchClient implements BraveSearchClient
 
         //missing/empty key → graceful empty, no exception
         if (empty($apiKey)) {
-            Log::warning('BraveSearchClient: api_key is not configured — returning empty result (DISC-01).', [
+ Log::warning('BraveSearchClient: api_key is not configured — returning empty result.', [
                 'query' => $query,
             ]);
 
@@ -65,14 +65,14 @@ class RealBraveSearchClient implements BraveSearchClient
                     'count'       => 5,
                 ]);
         } catch (ConnectionException $e) {
-            Log::warning('BraveSearchClient: connection error — returning empty result (DISC-01).', [
+ Log::warning('BraveSearchClient: connection error — returning empty result.', [
                 'query'   => $query,
                 'message' => $e->getMessage(),
             ]);
 
             return [];
         } catch (Throwable $e) {
-            Log::warning('BraveSearchClient: transport error — returning empty result (DISC-01).', [
+ Log::warning('BraveSearchClient: transport error — returning empty result.', [
                 'query'   => $query,
                 'message' => $e->getMessage(),
             ]);
@@ -81,7 +81,7 @@ class RealBraveSearchClient implements BraveSearchClient
         }
 
         if (! $response->successful()) {
-            Log::warning('BraveSearchClient: non-200 response — returning empty result (DISC-01).', [
+ Log::warning('BraveSearchClient: non-200 response — returning empty result.', [
                 'query'  => $query,
                 'status' => $response->status(),
             ]);

@@ -15,7 +15,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
  * user-typed content. This rule uses `mb_strlen($value, 'UTF-8')` so a
  * sentence like "perché" counts as 6 characters (not 7 bytes).
  *
- * Threat: (UTF-8 truncation tampering / mis-validation).
+ * Threat: UTF-8 truncation tampering and mis-validation.
  */
 class MultibyteMax implements ValidationRule
 {

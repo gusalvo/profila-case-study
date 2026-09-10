@@ -9,7 +9,7 @@ use App\Services\Discovery\DTOs\BraveResult;
 /**
  * BraveSearchClient — Brave web-search HTTP boundary contract.
  *
- * NEVER throws — returns empty array on any failure (DISC-01: non-blocking).
+ * NEVER throws — returns empty array on any failure (non-blocking).
  * Implementations: RealBraveSearchClient (Http + Brave API)
  * DemoBraveSearchClient (per-vertical fixtures, no HTTP call).
  *
@@ -20,7 +20,7 @@ interface BraveSearchClient
 {
     /**
      * Execute a web search query and return normalized results.
-     * NEVER throws — returns empty array on any failure (DISC-01).
+ * NEVER throws — returns empty array on any failure.
      *
      * @return list<BraveResult>
      */

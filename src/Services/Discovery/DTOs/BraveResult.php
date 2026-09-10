@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Discovery\DTOs;
 
 /**
- * BraveResult — normalized result from a Brave web-search API call (DISC-01).
+ * BraveResult — normalized result from a Brave web-search API call.
  *
  * Produced by RealBraveSearchClient from `web.results[]` JSON items.
  * The `normalizedHost` is computed via parse_url($url, PHP_URL_HOST) + mb_strtolower

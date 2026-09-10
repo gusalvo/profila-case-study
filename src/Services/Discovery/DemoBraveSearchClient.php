@@ -9,7 +9,7 @@ use App\Models\Brand;
 use App\Services\Discovery\DTOs\BusinessCandidate;
 
 /**
- * DemoBraveSearchClient — HTTP-free Brave client for AI_MODE=demo (DISC-01).
+ * DemoBraveSearchClient — HTTP-free Brave client for AI_MODE=demo.
  *
  * Returns an empty list from search — zero HTTP calls, zero side-effects.
  * Per-vertical BusinessCandidate fixtures are dispatched via candidatesFor
@@ -23,7 +23,7 @@ final class DemoBraveSearchClient implements BraveSearchClient
     /**
      * Returns an empty array — no HTTP call issued in demo mode.
      *
-     * NEVER throws — returns empty array (DISC-01).
+ * NEVER throws — returns empty array.
      *
      * @return list<\App\Services\Discovery\DTOs\BraveResult>
      */

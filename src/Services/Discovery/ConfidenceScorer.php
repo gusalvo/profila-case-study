@@ -8,7 +8,7 @@ use App\Models\Brand;
 use App\Services\Discovery\DTOs\BraveResult;
 
 /**
- * ConfidenceScorer — assigns deterministic alta|media|bassa confidence to BraveResults (DISC-05).
+ * ConfidenceScorer — assigns deterministic alta|media|bassa confidence to BraveResults.
  *
  * Reads weights and thresholds from config('discovery.confidence') — data stays in config
  * PHP logic stays stable for post-deploy tuning.
@@ -26,9 +26,9 @@ use App\Services\Discovery\DTOs\BraveResult;
  * score >= thresholds['media'] → 'media'
  * else → 'bassa'
  *
- * Returns results paired with confidence, sorted alta → media → bassa (DISC-05).
+ * Returns results paired with confidence, sorted alta → media → bassa.
  *
- * MUST be called AFTER BlocklistFilter (/ DISC-04).
+ * MUST be called AFTER BlocklistFilter.
  */
 final class ConfidenceScorer
 {
